@@ -8,14 +8,29 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/app/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import Bento from "@/components/bento";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
-      <section id="hero">
-        <div className="mx-auto w-full max-w-3xl space-y-8">
+      <section
+        id="hero"
+        className="relative -mx-[50vw] left-[50%] right-[50%] w-screen -mt-12 sm:-mt-24 mb-10 overflow-hidden"
+      >
+        {/* Base gradient layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-white to-transparent">
+          {/* Gradient circles */}
+          <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-gradient-to-r from-blue-400/20 to-purple-500/20 blur-[120px] animate-pulse hover:animate-[pulse_5s_ease-in-out_forwards] hover:w-[50%] hover:h-[50%]" />
+          <div className="absolute top-[20%] right-[-5%] w-[40%] h-[40%] rounded-full bg-gradient-to-l from-purple-400/20 to-pink-500/20 blur-[120px] animate-pulse delay-[2s] hover:animate-[pulse_5s_ease-in-out_forwards] hover:w-[50%] hover:h-[50%]" />
+
+          {/* SVG Circle pattern overlay */}
+          <div className="absolute inset-0 bg-[url('/public/images/circles.svg')] bg-cover bg-center opacity-50" />
+        </div>
+
+        {/* Content container */}
+        <div className="relative mx-auto max-w-4xl pt-24 md:pt-32 px-6">
           <div className="gap-2 flex justify-between">
             <div className="flex-col flex flex-1 space-y-1.5">
               <BlurFadeText
@@ -25,18 +40,34 @@ export default function Page() {
                 text={`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
               />
               <BlurFadeText
-                className="max-w-[600px] md:text-xl"
+                className="max-w-[600px] md:text-xl text-gray-500"
                 delay={BLUR_FADE_DELAY}
                 text={DATA.description}
               />
             </div>
             <BlurFade delay={BLUR_FADE_DELAY}>
-              <Avatar className="h-40 w-40 border">
-                <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-                <AvatarFallback>{DATA.initials}</AvatarFallback>
-              </Avatar>
+              <div className="relative group">
+                {/* Ambient glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
+
+                <Avatar className="relative h-40 w-40 rounded-full border-4 border-white shadow-xl transition duration-300 hover:scale-[1.02] bg-white">
+                  <AvatarImage
+                    alt={DATA.name}
+                    src={DATA.avatarUrl}
+                    className="object-cover"
+                  />
+                  <AvatarFallback>{DATA.initials}</AvatarFallback>
+                </Avatar>
+              </div>
             </BlurFade>
           </div>
+        </div>
+
+        {/* Bottom fade effect */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
+
+        <div className="mt-20 m-9">
+          <Bento />
         </div>
       </section>
       <section id="about">
