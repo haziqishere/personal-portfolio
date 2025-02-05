@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   GlobeIcon,
   ShoppingCartIcon,
@@ -11,19 +12,32 @@ import { cn } from "@/lib/utils";
 const features = [
   {
     Icon: GlobeIcon,
-    name: "Global sales from day one",
-    description:
-      "Control currencies, payment & fulfillment providers, tax, shipping options, and more.",
+    name: "Involve Competitively in Hackathon",
+    description: "Sharpen technical, problem-solving, and teamwork skills.",
     href: "/",
     cta: "Learn more",
     background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50" />
+      <div className="relative w-full h-full overflow-hidden rounded-lg">
+        {" "}
+        {/* Added overflow-hidden and rounded corners */}
+        <div className="absolute inset-0 w-full h-full bg-slate-200/70 z-10" />{" "}
+        {/* Made overlay cover full dimensions */}
+        <Image
+          className="object-cover w-full h-full"
+          src="/hackathon-picture/um_hackathon.jpg"
+          alt="umhackathon"
+          width={1000}
+          height={300}
+          priority
+        />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/30 to-transparent z-20" />
+      </div>
     ),
     className: "lg:col-span-2 lg:row-span-1",
   },
   {
     Icon: ShoppingCartIcon,
-    name: "Cart & checkout",
+    name: "Leadership",
     description:
       "A lightning-fast Cart API complete with discounts, gift cards, shipping, and payment.",
     href: "/",
@@ -35,7 +49,7 @@ const features = [
   },
   {
     Icon: TramFrontIcon,
-    name: "Omnichannel ready",
+    name: "Sports",
     description:
       "Sell through marketplaces, physical stores, etc., and manage from one unified overview.",
     href: "/",
@@ -47,9 +61,9 @@ const features = [
   },
   {
     Icon: PackageIcon,
-    name: "Powerful order management features",
+    name: "Big Passion For Tech",
     description:
-      "Fulfill from multiple locations, instantly create return and exchange flows, and much more.",
+      "Spent semester break to became Full Stack Developer Summer Intern. Participated in Tech Meetups and Events.",
     href: "/",
     cta: "Learn more",
     background: (
@@ -68,6 +82,7 @@ const Bento = () => {
           {...feature}
           className={cn(
             feature.className,
+            "h-[23rem]",
             "bg-white dark:bg-neutral-950 dark:hover:bg-neutral-900 transition-all duration-300",
             "border border-neutral-200 dark:border-neutral-800",
             "rounded-3xl overflow-hidden",

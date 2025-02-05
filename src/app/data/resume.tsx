@@ -228,6 +228,7 @@ export const DATA = {
       description:
         "Developed a fullstack React WebApp for SMEs to predict market performance based on NewsAPI and process it using NLP with BERT Transformers. On top of that, we use LLM to suggest Loan and Grant options for the SMEs.",
       image: "/hackathon/jomhack_datathon.jpg",
+      achievement: "3rd Place",
       mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2019/mlh-trust-badge-2019-white.svg",
       links: [],
     },
@@ -238,6 +239,7 @@ export const DATA = {
       description:
         "Developed WebApp for Air Selangor for automate drone deployment for asset inspection. Integrate trained computer vision to detect threats and anr pomalies neaipeline and pumphouse.",
       image: "/hackathon/airselangor.jpg",
+      achievement: "Top 15 Finalist",
       mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2019/mlh-trust-badge-2019-white.svg",
       links: [],
     },
@@ -248,6 +250,7 @@ export const DATA = {
       description:
         "2nd Place among 250+ teams with 900 participants globally in total. Ranked No.1 in SDG Zero Hunger category and No.1 among public universities including UM, USM, UTM and UiTM. Built Flutter app for paddy management integrated with Image Processing to identify plant desease. Implement on-site Raspberry Pi pest detector with custom Audio Classifier Tensorflow model.",
       image: "/hackathon/vhackusm.jpg",
+      achievement: "1st Runner Up",
       mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2019/mlh-trust-badge-2019-white.svg",
       links: [],
     },
@@ -259,6 +262,7 @@ export const DATA = {
         "Developed a fullstack React WebApp for Security Comission Malaysia to automate PLC Shariah Compliance Assessment using custom python algorithm.",
       icon: "public",
       image: "/hackathon/umhackathon.jpg",
+      achievement: "Champion",
       links: [],
     },
     {
@@ -268,6 +272,7 @@ export const DATA = {
       description:
         "Developed a Flutter mobile app to predict congestion in public transportation system and reroute user to faster path. ",
       image: "/hackathon/map2u.png",
+      achievement: "Champion",
       links: [
         {
           title: "Github",
@@ -283,7 +288,7 @@ export const DATA = {
       description:
         "Developed a Flutter mobile app for plant health analysis using Image Processing.",
       image: "/hackathon/hack@10.png",
-      win: "Best Data Hack",
+      achievement: "Champion",
       mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2018/white.svg",
       links: [
         {
@@ -315,6 +320,7 @@ export const DATA = {
       description:
         "Developed a miniature power plant with motors and IoT sensors. Flutter mobile app used to remotely monitor and control the readings. ",
       image: "/hackathon/Thing-a-thon.jpg",
+      achievement: "Champion",
       links: [
         {
           title: "Organization",

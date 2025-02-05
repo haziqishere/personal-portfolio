@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -7,16 +6,20 @@ import { Button } from "@/components/ui/button";
 const BentoGrid = ({
   children,
   className,
+  cardHeight = "22rem", // Add a default cardHeight prop
 }: {
   children: ReactNode;
   className?: string;
+  cardHeight?: string; // Add cardHeight prop type
 }) => {
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
+        "grid w-full grid-cols-3 gap-4",
+        "min-h-[28rem]", // Add minimum height here
         className
       )}
+      style={{ gridAutoRows: cardHeight }}
     >
       {children}
     </div>
@@ -30,7 +33,6 @@ const BentoCard = ({
   Icon,
   description,
   href,
-  cta,
 }: {
   name: string;
   className: string;
@@ -38,11 +40,11 @@ const BentoCard = ({
   Icon: any;
   description: string;
   href: string;
-  cta: string;
 }) => (
   <div
     className={cn(
       "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-3xl",
+      "h-[28rem", // Add a fixed height here
       // light styles
       "bg-white shadow-sm hover:shadow-md",
       // dark styles
@@ -71,12 +73,7 @@ const BentoCard = ({
         asChild
         size="sm"
         className="hover:bg-neutral-100 dark:hover:bg-neutral-800"
-      >
-        <a href={href} className="flex items-center">
-          {cta}
-          <ArrowRightIcon className="ml-2 h-4 w-4" />
-        </a>
-      </Button>
+      ></Button>
     </div>
   </div>
 );
