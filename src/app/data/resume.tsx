@@ -8,7 +8,7 @@ export const DATA = {
   location: "Kuala Lumpur, Malasyia",
   locationLink: "https://www.google.com/maps/place/Kuala+Lumpur",
   description:
-    "Final year student at Universiti Putra Malaysia, majoring in Computer Science. I am passionate about software development and I am always looking for opportunities to learn and grow.",
+    "Final year student at Universiti Putra Malaysia, majoring in Computer Science. I am passionate about data and building data infrastructure. I am always looking for opportunities to learn and grow.",
   summary:
     "I have deep passion for software development and AI. I participated competitively in hackathons to improve my technical and problem-solving skills. I also sharpened my soft-skill by involving in leadership roles such as being Computer Science Faculty Representative Council and represented my university in intervarsity sport competition. My proudest achievement is being champion in both UM Hackathon 2024 and Sukan Institusi Pendidikan Tinggi (SUKIPT) 2024 while representing Universiti Putra Malaysia. ",
   avatarUrl: "/me.jpg",
@@ -66,11 +66,23 @@ export const DATA = {
 
   work: [
     {
+      company: "Payment Network Malaysia (PayNet)",
+      href: "https://paynet.my/index.html",
+      badges: [],
+      location: "On-Site",
+      title: "Data Scientist Intern",
+      logoUrl: "/company/paynetcircular.png",
+      start: "March 2025",
+      end: "Aug 2025",
+      description:
+        "Developed ecommerce website for client using Next.js, TailwindCSS, and Strapi for the front-end & utilizes AWS services such as Amazon RDS and S3 for the back-end. Built RESTFUL API for admin to upload new product into postgreSQL database and AWS S3 for storing product images enabling low-cost maintanence.  ",
+    },
+    {
       company: "Nexz Gen Studio",
       href: "https://nexzgen.com/",
       badges: [],
       location: "Hibrid",
-      title: "Full Stack Developer",
+      title: "Full Stack Web Developer Intern",
       logoUrl: "/company/nexzgencircular.png",
       start: "Aug 2024",
       end: "Oct 2024",
@@ -221,6 +233,17 @@ export const DATA = {
     },
   ],
   hackathons: [
+    {
+      title: "PayHack 2024 Open Finance Hackathon",
+      dates: "23 November - 1 Dec 2024",
+      location: "Asia Business School, Kuala Lumpur",
+      description:
+        "Developed a fullstack React WebApp for SMEs to predict market performance based on NewsAPI and process it using NLP with BERT Transformers. On top of that, we use LLM to suggest Loan and Grant options for the SMEs.",
+      image: "/hackathon/payhack.png",
+      achievement: "Champion",
+      mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2019/mlh-trust-badge-2019-white.svg",
+      links: [],
+    },
     {
       title: "JomHack MCMC Datathon",
       dates: "2-4 November 2024",

@@ -33,6 +33,7 @@ const BentoCard = ({
   Icon,
   description,
   href,
+  iconColor = "text-neutral-700 dark:text-neutral-200", // Add default color
 }: {
   name: string;
   className: string;
@@ -40,6 +41,7 @@ const BentoCard = ({
   Icon: any;
   description: string;
   href: string;
+  iconColor?: string;
 }) => (
   <div
     className={cn(
@@ -57,7 +59,7 @@ const BentoCard = ({
     <div className="absolute inset-0">{background}</div>
     <div className="relative z-10 p-6">
       <div className="flex items-center gap-4 mb-4">
-        <Icon className="h-8 w-8 text-neutral-600 dark:text-neutral-300" />
+        <Icon className={cn("h-8 w-8", iconColor)} />
         <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-200">
           {name}
         </h3>
