@@ -80,7 +80,7 @@ export const DATA = {
         "Developed ecommerce website for client using Next.js, TailwindCSS, and Strapi for the front-end & utilizes AWS services such as Amazon RDS and S3 for the back-end. Built RESTFUL API for admin to upload new product into postgreSQL database and AWS S3 for storing product images enabling low-cost maintanence.  ",
     },
     {
-      company: "Nexz Gen Studio",
+      company: "NexzGen Studio",
       href: "https://nexzgen.com/",
       badges: [],
       location: "Hibrid",

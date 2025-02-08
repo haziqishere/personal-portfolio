@@ -22,7 +22,7 @@ export function HackathonTimeline() {
           {/* Timeline */}
           <div className="relative">
             {/* Vertical Line */}
-            <div className="absolute left-4 inset-y-0 w-[2px] bg-gradient-to-b from-blue-500 to-purple-500" />
+            <div className="absolute left-4 inset-y-0 w-[2px] bg-gradient-to-b from-blue-500/30 to-purple-500/30" />
 
             {/* Content */}
             <div className="space-y-12 list-none">

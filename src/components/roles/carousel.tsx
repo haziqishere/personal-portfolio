@@ -70,7 +70,7 @@ rolesData.push(
     content: <RoleContent role={rolesData[1]} />,
   },
   {
-    category: "Community",
+    category: "Hackathon",
     title: "Hackathoner",
     src: "/placeholder/hackathon.jpg",
     highlight: "From ideation to MVP in 48 hours.",
@@ -80,7 +80,7 @@ rolesData.push(
     content: <RoleContent role={rolesData[2]} />,
   },
   {
-    category: "Leadership",
+    category: "Community",
     title: "Mentor",
     src: "/placeholder/mentor.jpg",
     highlight: "Guiding the next generation.",
@@ -98,6 +98,35 @@ rolesData.push(
       "Speaking at hackathons and tech events to inspire and educate others.",
     contentImage: "/placeholder/speaker-content.jpg",
     content: <RoleContent role={rolesData[4]} />,
+  },
+  {
+    category: "Leadership",
+    title: "Faculty Representative",
+    src: "/placeholder/speaker.jpg",
+    highlight: "Organize events and represent the faculty.",
+    description:
+      "Oranizing events and representing the faculty in various university-level events.",
+    contentImage: "/placeholder/speaker-content.jpg",
+    content: <RoleContent role={rolesData[5]} />,
+  },
+  {
+    category: "Hackathon",
+    title: "Judge",
+    src: "/placeholder/hackathon.jpg",
+    highlight: "Providing feedback and selecting groups.",
+    description:
+      "Judging hackathon projects based on creativity, technical complexity, and impact.",
+    contentImage: "/placeholder/hackathon-content.jpg",
+    content: <RoleContent role={rolesData[2]} />,
+  },
+  {
+    category: "National-Level and Hobby",
+    title: "Athlete",
+    src: "/placeholder/speaker.jpg",
+    highlight: "Represented Pahang in SUKMA and Represented UPM.",
+    description: "Represented Pahang in SUKMA and Represented UPM in MASUM.",
+    contentImage: "/placeholder/speaker-content.jpg",
+    content: <RoleContent role={rolesData[5]} />,
   }
 );
 
