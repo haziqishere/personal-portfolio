@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DATA } from "@/app/data/resume";
+import { DATA } from "../../public/data/resume";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -59,17 +59,6 @@ export default function Navbar() {
               </Tooltip>
             </DockIcon>
           ))}
-        <Separator orientation="vertical" className="h-full py-2" />
-        <DockIcon>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <ModeToggle />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Theme</p>
-            </TooltipContent>
-          </Tooltip>
-        </DockIcon>
       </Dock>
     </div>
   );

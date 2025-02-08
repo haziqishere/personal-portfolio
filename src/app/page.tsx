@@ -1,23 +1,36 @@
-import { HackathonCard } from "@/components/hackathon-card";
+import { HackathonCard } from "@/components/hackathon/hackathon-card";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { DATA } from "@/app/data/resume";
+import { DATA } from "../../public/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
-import Bento from "@/components/bento";
+import Bento from "@/components/bento components/bento";
+
+import { ETLPipelineShowcase } from "@/components/pipeline/container-scroll";
+import RolesCarousel from "@/components/roles/carousel";
+import HackathonTimeline from "@/components/hackathon/timeline";
+import { WavyBackground } from "@/components/ui/wavy-background";
+import { WavyBackgroundSection } from "@/components/cta/wavy-background";
+import { VortexSection } from "@/components/cta/vortext-section";
+import { BackgroundBeamSection } from "@/components/hero/background-beam";
+import { SkillsGrid } from "@/components/skills/skills";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
-    <main className="flex flex-col min-h-[100dvh] space-y-10">
+    <main className="flex flex-col min-h-[100dvh] space-y-10 ">
+      {/* Background Beam Section */}
+      <section className="relative">
+        <BackgroundBeamSection />
+      </section>
       <section
-        id="hero"
-        className="relative -mx-[50vw] left-[50%] right-[50%] w-screen -mt-12 sm:-mt-24 mb-10 overflow-hidden"
+        id="bento"
+        className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden"
       >
         {/* Base gradient layer */}
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-white to-transparent">
@@ -28,52 +41,27 @@ export default function Page() {
           {/* SVG Circle pattern overlay */}
           <div className="absolute inset-0 bg-[url('/public/images/circles.svg')] bg-cover bg-center opacity-50" />
         </div>
-
         {/* Content container */}
-        <div className="relative mx-auto max-w-4xl pt-24 md:pt-32 px-6">
-          <div className="gap-2 flex justify-between">
-            <div className="flex-col flex flex-1 space-y-1.5">
-              <BlurFadeText
-                delay={BLUR_FADE_DELAY}
-                className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-                yOffset={8}
-                text={`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
-              />
-              <BlurFadeText
-                className="max-w-[600px] md:text-xl text-gray-500"
-                delay={BLUR_FADE_DELAY}
-                text={DATA.description}
-              />
-            </div>
-            <BlurFade delay={BLUR_FADE_DELAY}>
-              <div className="relative group">
-                {/* Ambient glow effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
-
-                <Avatar className="relative h-40 w-40 rounded-full border-4 border-white shadow-xl transition duration-300 hover:scale-[1.02] bg-white">
-                  <AvatarImage
-                    alt={DATA.name}
-                    src={DATA.avatarUrl}
-                    className="object-cover"
-                  />
-                  <AvatarFallback>{DATA.initials}</AvatarFallback>
-                </Avatar>
-              </div>
-            </BlurFade>
-          </div>
-        </div>
-
+        <div className="relative mx-auto max-w-4xl pt-24 md:pt-32 px-6"></div>ß
         {/* Bottom fade effect */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
-
-        <div className="mt-20 m-9">
+        {/* Bento */}
+        <div className="pb-24">
           <Bento />
         </div>
       </section>
+      {/* Apple Carousel */}
+      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen -mt-12 sm:-mt-24 overflow-hidden ">
+        <RolesCarousel />
+      </section>
+      <BlurFade delay={BLUR_FADE_DELAY * 3}>
+        <h2 className="max-w-7xl mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+          About Me
+        </h2>
+      </BlurFade>
+
+      {/* About Section */}
       <section id="about">
-        <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <h2 className="text-xl font-bold">About</h2>
-        </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
           <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
             {DATA.summary}
@@ -128,19 +116,26 @@ export default function Page() {
           ))}
         </div>
       </section>
+
       <section id="skills">
-        <div className="flex min-h-0 flex-col gap-y-3">
+        <div className="flex min-h-0 flex-col">
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
             <h2 className="text-xl font-bold">Skills</h2>
           </BlurFade>
-          <div className="flex flex-wrap gap-1">
-            {DATA.skills.map((skill, id) => (
-              <BlurFade key={skill} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
-                <Badge key={skill}>{skill}</Badge>
-              </BlurFade>
-            ))}
+          <div className="flex flex-wrap">
+            <BlurFade delay={BLUR_FADE_DELAY * 10}>
+              <SkillsGrid />
+            </BlurFade>
           </div>
         </div>
+      </section>
+      {/* Hackathon Timeline */}
+      <section className="py-2" id="hackathons">
+        <HackathonTimeline />
+      </section>
+      {/* ETL Pipeline */}
+      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden bg-gradient-to-b from-white to-slate-50">
+        <ETLPipelineShowcase />
       </section>
       <section id="projects">
         <div className="space-y-12 w-full py-12">
@@ -183,49 +178,15 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section id="hackathons">
-        <div className="space-y-12 w-full py-12">
-          <BlurFade delay={BLUR_FADE_DELAY * 13}>
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
-                  Hackathons
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  I like building things
-                </h2>
-                <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  During my time in university, I attended{" "}
-                  {DATA.hackathons.length}+ hackathons. People from around the
-                  country would come together and build incredible things in 2-3
-                  days. It was eye-opening to see the endless possibilities
-                  brought to life by a group of motivated and passionate
-                  individuals.
-                </p>
-              </div>
-            </div>
-          </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <ul className="mb-4 ml-4 divide-y divide-dashed border-l">
-              {DATA.hackathons.map((project, id) => (
-                <BlurFade
-                  key={project.title + project.dates}
-                  delay={BLUR_FADE_DELAY * 15 + id * 0.05}
-                >
-                  <HackathonCard
-                    title={project.title}
-                    description={project.description}
-                    location={project.location}
-                    dates={project.dates}
-                    image={project.image}
-                    links={project.links}
-                  />
-                </BlurFade>
-              ))}
-            </ul>
-          </BlurFade>
-        </div>
+
+      {/* Vortx Background CTA Section */}
+      <section
+        id="cta"
+        className="relative py-20 bg-black -mx-[50vw] left-[50%] right-[50%] w-screen -mt-12 sm:-mt-24 mb-10 overflow-hidden"
+      >
+        <VortexSection />
       </section>
+
       <section id="contact">
         <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 16}>
