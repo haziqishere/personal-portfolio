@@ -1,3 +1,4 @@
+"use client";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { Marquee3D } from "./bento components/awardMarquee";
+import FinTechVisual from "./bento components/fintech";
 
 const features = [
   {
@@ -20,9 +22,14 @@ const features = [
     cta: "Learn more",
     background: (
       <div className="relative w-full h-full overflow-hidden rounded-lg">
-        {" "}
-        {/* Added overflow-hidden and rounded corners */}
-        <div className="absolute right-[-15%] md:right-[-12%] h-full">
+        {/*  <Image
+          className="absolute inset-0 w-full h-full [mask-image:linear-gradient(to_bottom_right,white_10%,transparent)]"
+          src="/asset/wave-2.svg"
+          alt="wave background"
+          fill
+          style={{ objectFit: "cover" }}
+        /> */}
+        <div className="absolute right-[-15%] md:right-[-12%] h-full z-10">
           <Image
             className="object-cover w-full h-full"
             src="/hackathon-picture/um_hackathon.png"
@@ -42,7 +49,7 @@ const features = [
     Icon: LaptopIcon,
     name: "Big Passion For Tech",
     description:
-      "Spent semester break to became Full Stack Developer Summer Intern. Participated in Tech Meetups and Events.",
+      "Participated in Tech Meetups and Events. Loves to read engineering blogs and tech-related books",
     href: "/",
     cta: "Learn more",
     background: <div></div>,
@@ -56,7 +63,7 @@ const features = [
       "Sell through marketplaces, physical stores, etc., and manage from one unified overview.",
     href: "/",
     cta: "Learn more",
-    background: <div />,
+    background: <FinTechVisual />,
     className: "lg:col-span-1 lg:row-span-1",
     iconColor: "text-green-500",
   },
@@ -69,7 +76,7 @@ const features = [
     cta: "Learn more",
     background: (
       <div className="relative w-full h-full">
-        <div className="absolute right-[-90%] md:right-[-70%] w-[150%] md:w-[120%] h-full">
+        <div className="absolute right-[-90%] md:right-[-70%] w-[150%] md:w-[120%] h-full [mask-image:radial-gradient(450px_circle_at_center,white_30%,transparent)]">
           <Marquee3D />
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/50 to-transparent z-20" />

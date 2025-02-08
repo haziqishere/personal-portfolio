@@ -64,7 +64,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
             <main className="relative w-full">
-              <div className="max-w-4xl mx-auto px-6 py-12 sm:py-24">
+              <div className="max-w-4xl mx-auto px-6 py-12 sm:py-24 ">
                 {children}
                 <Navbar />
               </div>
