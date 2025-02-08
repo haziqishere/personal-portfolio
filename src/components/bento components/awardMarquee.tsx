@@ -3,27 +3,27 @@ import { Marquee } from "@/components/ui/marquee";
 const logos = [
   {
     name: "Microsoft",
-    img: "https://picsum.photos/id/1/200/300",
+    img: "/mypic/anugerah.jpeg",
   },
   {
     name: "Apple",
-    img: "https://picsum.photos/id/2/200/300",
+    img: "/mypic/piala.jpg",
   },
   {
     name: "Google",
-    img: "https://picsum.photos/id/3/200/300",
+    img: "/mypic/masum.jpeg",
   },
   {
     name: "Facebook",
-    img: "https://picsum.photos/id/4/200/300",
+    img: "/mypic/kolej.jpeg",
   },
   {
     name: "LinkedIn",
-    img: "https://picsum.photos/id/5/200/300",
+    img: "/mypic/masummedal.jpeg",
   },
   {
     name: "Twitter",
-    img: "https://picsum.photos/id/6/200/300",
+    img: "/mypic/penghargaancomcil.jpg",
   },
 ];
 
@@ -32,7 +32,7 @@ export function Marquee3D() {
     <div className="relative flex h-full w-96 flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-background px-20">
       <div className="flex flex-row gap-4 [perspective:300px]">
         <Marquee
-          className="h-96 justify-center overflow-hidden [--duration:60s] [--gap:1rem]"
+          className="h-96 justify-center overflow-hidden [--duration:25s] [--gap:1rem]"
           vertical
           style={{
             transform:

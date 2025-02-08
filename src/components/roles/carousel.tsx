@@ -52,7 +52,7 @@ rolesData.push(
   {
     category: "Current Role",
     title: "Data Scientist",
-    src: "/placeholder/data-scientist.jpg",
+    src: "/company/paynetcircular.png",
     highlight: "Transforming data into actionable insights.",
     description:
       "Building end-to-end data pipelines and ML models to solve complex business problems.",
@@ -62,7 +62,7 @@ rolesData.push(
   {
     category: "Past Role",
     title: "Software Engineer",
-    src: "/placeholder/software-engineer.jpg",
+    src: "/mypic/swe.jpg",
     highlight: "Building scalable solutions.",
     description:
       "Developing full-stack applications with modern technologies and best practices.",
@@ -72,7 +72,7 @@ rolesData.push(
   {
     category: "Hackathon",
     title: "Hackathoner",
-    src: "/placeholder/hackathon.jpg",
+    src: "/mypic/hackathoner.jpg",
     highlight: "From ideation to MVP in 48 hours.",
     description:
       "Multiple hackathon wins demonstrating rapid prototyping and problem-solving skills.",
@@ -82,7 +82,7 @@ rolesData.push(
   {
     category: "Community",
     title: "Mentor",
-    src: "/placeholder/mentor.jpg",
+    src: "/mypic/mentor.jpeg",
     highlight: "Guiding the next generation.",
     description:
       "Supporting junior developers and hackathon participants in their technical journey.",
@@ -92,7 +92,7 @@ rolesData.push(
   {
     category: "Community",
     title: "Speaker",
-    src: "/placeholder/speaker.jpg",
+    src: "/mypic/speaker.png",
     highlight: "Sharing knowledge and experiences.",
     description:
       "Speaking at hackathons and tech events to inspire and educate others.",
@@ -102,7 +102,7 @@ rolesData.push(
   {
     category: "Leadership",
     title: "Faculty Representative",
-    src: "/placeholder/speaker.jpg",
+    src: "/mypic/leadership.png",
     highlight: "Organize events and represent the faculty.",
     description:
       "Oranizing events and representing the faculty in various university-level events.",
@@ -112,7 +112,7 @@ rolesData.push(
   {
     category: "Hackathon",
     title: "Judge",
-    src: "/placeholder/hackathon.jpg",
+    src: "/mypic/judge.jpeg",
     highlight: "Providing feedback and selecting groups.",
     description:
       "Judging hackathon projects based on creativity, technical complexity, and impact.",
@@ -122,7 +122,7 @@ rolesData.push(
   {
     category: "National-Level and Hobby",
     title: "Athlete",
-    src: "/placeholder/speaker.jpg",
+    src: "/mypic/athlete.jpeg",
     highlight: "Represented Pahang in SUKMA and Represented UPM.",
     description: "Represented Pahang in SUKMA and Represented UPM in MASUM.",
     contentImage: "/placeholder/speaker-content.jpg",

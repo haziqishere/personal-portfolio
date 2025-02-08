@@ -1,49 +1,95 @@
-import React from "react";
-import { motion, useAnimation } from "framer-motion";
+"use client";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
+import { useRef, useState } from "react";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import * as THREE from "three";
+import type { Group } from "three";
 
-// Animated Chart for FinTech
-const FinTechVisual = () => {
+const CreditCard = () => {
+  const { scene } = useGLTF("/asset/creditcard.glb");
+  const groupRef = useRef<Group>(null);
+  const [hovered, setHovered] = useState(false);
+
+  const clonedScene = scene.clone();
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      // Gentle floating animation
+      groupRef.current.position.y =
+        Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+
+      // Subtle rotation
+      groupRef.current.rotation.y =
+        Math.sin(state.clock.elapsedTime * 0.2) * 0.1;
+
+      // Hover effect
+      const scale = hovered
+        ? 1 + Math.sin(state.clock.elapsedTime * 8) * 0.01 + 0.05
+        : 1;
+      groupRef.current.scale.setScalar(scale);
+    }
+  });
+
   return (
-    <div className="relative h-full w-full overflow-hidden">
-      {/* Animated line chart background */}
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-        <motion.path
-          d="M0,50 Q25,40 50,60 T100,50"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          fill="none"
-          className="text-green-500/20"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <motion.path
-          d="M0,60 Q25,50 50,70 T100,60"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          fill="none"
-          className="text-blue-500/20"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 2, delay: 0.5, repeat: Infinity }}
-        />
-      </svg>
+    <group
+      ref={groupRef}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
+      <primitive
+        object={clonedScene}
+        scale={4} // Increased scale
+        position={[0, -0.5, 0]} // Moved down
+        rotation={[0, Math.PI / 4, 0]}
+      />
+    </group>
+  );
+};
 
-      {/* Glowing dots representing data points */}
-      <div className="absolute inset-0 flex items-center justify-around">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="w-2 h-2 bg-green-500 rounded-full"
-            initial={{ scale: 0.5, opacity: 0.5 }}
-            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
+const FinTech3DVisual = () => {
+  return (
+    <div className="relative w-full overflow-hidden">
+      {/* Wrapper div with margin-top to move the component down */}
+      <div className="mt-44">
+        {" "}
+        {/* Adjust this value to move up/down */}
+        <Canvas
+          camera={{ position: [0, 0, 4], fov: 40 }} // Closer camera with narrower FOV
+          className="h-[700px]" // Increased height
+        >
+          <CreditCard />
+
+          <ambientLight intensity={0.7} />
+          <pointLight position={[10, 10, 10]} intensity={0.8} />
+          <pointLight
+            position={[-10, -10, -10]}
+            intensity={0.5}
+            color="#ffffff"
           />
-        ))}
+
+          <Environment preset="city" />
+          <EffectComposer>
+            <Bloom
+              intensity={0.5}
+              luminanceThreshold={0.2}
+              luminanceSmoothing={0.9}
+              height={300}
+            />
+          </EffectComposer>
+
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            autoRotate
+            autoRotateSpeed={5}
+            maxPolarAngle={Math.PI / 2}
+            minPolarAngle={Math.PI / 2}
+          />
+        </Canvas>
       </div>
     </div>
   );
 };
 
-// Export both components to use in your Bento grid
-export default FinTechVisual;
+export default FinTech3DVisual;

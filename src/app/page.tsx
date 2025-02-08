@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/app/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
-import Bento from "@/components/bento";
+import Bento from "@/components/bento components/bento";
 
 import { ETLPipelineShowcase } from "@/components/pipeline/container-scroll";
 import RolesCarousel from "@/components/roles/carousel";
@@ -55,12 +55,14 @@ export default function Page() {
       <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen -mt-12 sm:-mt-24 overflow-hidden ">
         <RolesCarousel />
       </section>
+      <BlurFade delay={BLUR_FADE_DELAY * 3}>
+        <h2 className="max-w-7xl mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+          About Me
+        </h2>
+      </BlurFade>
 
       {/* About Section */}
       <section id="about">
-        <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <h2 className="text-xl font-bold">About</h2>
-        </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
           <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
             {DATA.summary}
