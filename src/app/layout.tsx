@@ -1,7 +1,7 @@
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { DATA } from "@/app/data/resume";
+import { DATA } from "../../public/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     template: `%s | ${DATA.name}`,
   },
   description: DATA.description,
+  icons: { icon: "/icons/snowflake.svg" },
   openGraph: {
     title: `${DATA.name}`,
     description: DATA.description,
@@ -64,7 +65,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
             <main className="relative w-full">
-              <div className="max-w-4xl mx-auto px-6 py-12 sm:py-24">
+              <div className="max-w-4xl mx-auto px-6 py-12 sm:py-24 ">
                 {children}
                 <Navbar />
               </div>
