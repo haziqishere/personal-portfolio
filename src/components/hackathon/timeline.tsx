@@ -1,7 +1,7 @@
 "use client";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { HackathonCard } from "./hackathon-card";
-import { DATA } from "@/app/data/resume";
+import { DATA } from "../../../public/data/resume";
 
 export function HackathonTimeline() {
   return (

@@ -2,7 +2,7 @@
 "use client";
 import { Vortex } from "@/components/ui/vortex";
 import { motion } from "framer-motion";
-import { DATA } from "@/app/data/resume";
+import { DATA } from "../../../public/data/resume";
 
 export function VortexSection() {
   return (

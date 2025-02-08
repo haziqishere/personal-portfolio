@@ -2,7 +2,7 @@
 "use client";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DATA } from "@/app/data/resume";
+import { DATA } from "../../../public/data/resume";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import BlurFade from "@/components/magicui/blur-fade";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"; // Install this from Aceternity

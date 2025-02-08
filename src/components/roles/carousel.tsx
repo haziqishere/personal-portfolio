@@ -31,7 +31,7 @@ export function RolesCarousel() {
   return (
     <div className="w-full h-full py-20 bg-gradient-to-t from-white to-slate-50">
       <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-        Roles I've Played
+        Roles I@apos;ve Played
       </h2>
       <Carousel items={cards} />
     </div>
