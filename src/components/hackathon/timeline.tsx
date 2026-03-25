@@ -1,11 +1,20 @@
 "use client";
+import { useState } from "react";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { HackathonCard } from "./hackathon-card";
 import { DATA } from "../../../public/data/resume";
 
+const PREVIEW_COUNT = 2;
+
 export function HackathonTimeline() {
+  const [expanded, setExpanded] = useState(false);
+
+  const visible = expanded
+    ? DATA.hackathons
+    : DATA.hackathons.slice(0, PREVIEW_COUNT);
+
   return (
-    <div className="relative min-h-screen">
+    <div className="relative">
       <TracingBeam className="px-6">
         <div className="max-w-2xl mx-auto antialiased pt-8 relative pl-12">
           {/* Header */}
@@ -26,12 +35,9 @@ export function HackathonTimeline() {
 
             {/* Content */}
             <div className="space-y-12 list-none">
-              {DATA.hackathons.map((hackathon, index) => (
+              {visible.map((hackathon, index) => (
                 <div key={hackathon.title} className="relative list-none">
-                  {/* Content Container */}
                   <div className="ml-16">
-                    {" "}
-                    {/* Increased margin to accommodate centered avatar */}
                     <HackathonCard
                       title={hackathon.title}
                       description={hackathon.description}
@@ -56,7 +62,7 @@ export function HackathonTimeline() {
                       </div>
                     </div>
                     {/* Dotted Separator */}
-                    {index !== DATA.hackathons.length - 1 && (
+                    {index !== visible.length - 1 && (
                       <div className="absolute left-0 right-0 bottom-0 h-[1px] border-b border-dashed border-gray-200 translate-y-6" />
                     )}
                   </div>
@@ -64,6 +70,28 @@ export function HackathonTimeline() {
               ))}
             </div>
           </div>
+
+          {/* Fade + Read more / Show less */}
+          {DATA.hackathons.length > PREVIEW_COUNT && (
+            <div className="relative">
+              {/* Blur fade overlay — only when collapsed */}
+              {!expanded && (
+                <div className="absolute -top-32 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-white pointer-events-none" />
+              )}
+              <div className="relative flex justify-center pt-4">
+                <button
+                  onClick={() => setExpanded((prev) => !prev)}
+                  className="flex items-center gap-1.5 text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors"
+                >
+                  {expanded ? (
+                    <>Show less <span>↑</span></>
+                  ) : (
+                    <>Read more <span className="animate-bounce inline-block">↓</span></>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </TracingBeam>
     </div>
