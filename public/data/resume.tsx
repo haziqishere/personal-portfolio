@@ -77,26 +77,43 @@ export const DATA = {
     {
       company: "Payment Network Malaysia (PayNet)",
       href: "https://paynet.my/index.html",
-      badges: [],
       location: "On-Site",
-      title: "Data Scientist Intern",
       logoUrl: "/company/paynetcircular.png",
       start: "March 2025",
       end: "Aug 2025",
-      description:
-        "Developed ecommerce website for client using Next.js, TailwindCSS, and Strapi for the front-end & utilizes AWS services such as Amazon RDS and S3 for the back-end. Built RESTFUL API for admin to upload new product into postgreSQL database and AWS S3 for storing product images enabling low-cost maintanence.  ",
+      roles: [
+        {
+          title: "Data Engineer",
+          period: "Sep 2025 - Current",
+          badges: [],
+          description:
+            "- Worked in Fraud Data and Engineering team for National Fraud Portal (NFP) in collaboration with Bank Negara\n- Using Ray to better manage the ML pipeline and model deployment\n- Increase Data Scientist and Data Engineers efficiency by building monitoring and alerting system for ML Pipeline and Data Pipeline to better manage the model performance and data quality.",
+        },
+        {
+          title: "Data Engineer Intern",
+          period: "March 2025 - Aug 2025",
+          badges: [],
+          description:
+            "- Worked in Fraud Data and Engineering team for National Fraud Portal (NFP) in collaboration with Bank Negara\n- Built data pipelines for ML Development by aggregating MyDebit and FPX transactions into Iceberg Table in Data Lake using Prefect running on AWS EKS. \n- Expand the Dataset for Fraud Detection ML to 150% \n- Increase fraudulent money trailing to 50% more (Just dummy numbers)",
+        },
+      ],
     },
     {
       company: "NexzGen Studio",
       href: "https://nexzgen.com/",
-      badges: [],
       location: "Hibrid",
-      title: "Full Stack Web Developer Intern",
       logoUrl: "/company/nexzgencircular.png",
       start: "Aug 2024",
       end: "Oct 2024",
-      description:
-        "Developed ecommerce website for client using Next.js, TailwindCSS, and Strapi for the front-end & utilizes AWS services such as Amazon RDS and S3 for the back-end. Built RESTFUL API for admin to upload new product into postgreSQL database and AWS S3 for storing product images enabling low-cost maintanence.  ",
+      roles: [
+        {
+          title: "Full Stack Web Developer Intern",
+          period: "Aug 2024 - Oct 2024",
+          badges: [],
+          description:
+            "Developed ecommerce website for client using Next.js, TailwindCSS, and Strapi for the front-end & utilizes AWS services such as Amazon RDS and S3 for the back-end. Built RESTFUL API for admin to upload new product into postgreSQL database and AWS S3 for storing product images enabling low-cost maintanence.",
+        },
+      ],
     },
   ],
   education: [

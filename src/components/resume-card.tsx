@@ -9,6 +9,13 @@ import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
+interface Role {
+  title: string;
+  period: string;
+  description?: string;
+  badges?: readonly string[];
+}
+
 interface ResumeCardProps {
   logoUrl: string;
   altText: string;
@@ -18,6 +25,7 @@ interface ResumeCardProps {
   badges?: readonly string[];
   period: string;
   description?: string;
+  roles?: readonly Role[]; // Changed to readonly Role[]
 }
 export const ResumeCard = ({
   logoUrl,
@@ -28,11 +36,14 @@ export const ResumeCard = ({
   badges,
   period,
   description,
+  roles,
 }: ResumeCardProps) => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  // Default to showing descriptions
+  const [isExpanded, setIsExpanded] = React.useState(true);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (description) {
+    // Only toggle if there's a description to show
+    if (description || (roles && roles.length > 0)) {
       e.preventDefault();
       setIsExpanded(!isExpanded);
     }
@@ -80,29 +91,77 @@ export const ResumeCard = ({
                   )}
                 />
               </h3>
-              <div className="text-xs sm:text-sm tabular-nums text-muted-foreground text-right">
-                {period}
-              </div>
+              {/* When we have multiple roles, we don't show the period here */}
+              {!roles && (
+                <div className="text-xs sm:text-sm tabular-nums text-muted-foreground text-right">
+                  {period}
+                </div>
+              )}
             </div>
-            {subtitle && <div className="font-sans text-xs">{subtitle}</div>}
+            {subtitle && !roles && <div className="font-sans text-xs">{subtitle}</div>}
           </CardHeader>
-          {description && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{
-                opacity: isExpanded ? 1 : 0,
 
-                height: isExpanded ? "auto" : 0,
-              }}
-              transition={{
-                duration: 0.7,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="mt-2 text-xs sm:text-sm"
-            >
-              {description}
-            </motion.div>
-          )}
+          {/* Content area for description or roles */}
+          <motion.div
+            initial={{ opacity: 1, height: "auto" }} // Start expanded
+            animate={{
+              opacity: isExpanded ? 1 : 0,
+              height: isExpanded ? "auto" : 0,
+            }}
+            transition={{
+              duration: 0.7,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="px-6 pb-4"
+          >
+            {/* Single role case */}
+            {description && !roles && (
+              <div className="whitespace-pre-line text-xs sm:text-sm">
+                {description}
+              </div>
+            )}
+
+            {/* Multiple roles case */}
+            {roles && roles.length > 0 && (
+              <div className="space-y-4">
+                {roles.map((role, index) => (
+                  <div
+                    key={index}
+                    className="border-t pt-2 first:border-t-0 first:pt-0"
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <div className="font-sans text-xs font-semibold">
+                        {role.title}
+                      </div>
+                      <div className="text-xs tabular-nums text-muted-foreground text-right">
+                        {role.period}
+                      </div>
+                    </div>
+
+                    {role.badges && role.badges.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-1">
+                        {role.badges.map((badge, i) => (
+                          <Badge
+                            key={i}
+                            variant="secondary"
+                            className="align-middle text-xs"
+                          >
+                            {badge}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+
+                    {role.description && (
+                      <div className="whitespace-pre-line text-xs sm:text-sm">
+                        {role.description}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
         </div>
       </Card>
     </Link>

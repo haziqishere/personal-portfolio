@@ -50,8 +50,18 @@ const rolesData: Array<{
 
 rolesData.push(
   {
+    category: "Upcoming Role",
+    title: "MLOps Engineer",
+    src: "/company/paynetcircular.png",
+    highlight: "Transforming data into actionable insights.",
+    description:
+      "Building end-to-end data pipelines and ML models to solve complex business problems.",
+    contentImage: "/placeholder/ds-content.jpg",
+    content: <RoleContent role={rolesData[0]} />,
+  },
+  {
     category: "Current Role",
-    title: "Data Scientist",
+    title: "Data Engineer",
     src: "/company/paynetcircular.png",
     highlight: "Transforming data into actionable insights.",
     description:
