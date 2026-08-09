@@ -24,7 +24,7 @@ export const DATA = {
   location: "Kuala Lumpur, Malasyia",
   locationLink: "https://www.google.com/maps/place/Kuala+Lumpur",
   description:
-    "Final year student at Universiti Putra Malaysia, majoring in Computer Science. I am passionate about data and building data infrastructure. I am always looking for opportunities to learn and grow.",
+    "24 • Kuala Lumpur 🇲🇾",
   summary:
     "I have deep passion for software development and AI. I participated competitively in hackathons to improve my technical and problem-solving skills. I also sharpened my soft-skill by involving in leadership " +
     "roles such as being Computer Science Faculty Representative Council and represented my university in intervarsity sport competition. My proudest achievement is being champion in both UM Hackathon 2024 and Sukan " +
