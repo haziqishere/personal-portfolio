@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,7 +11,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getSkillBySlug } from "@/lib/skills";
+import { cn } from "@/lib/utils";
 import { DATA } from "../../../public/data/resume";
+
+type Mode = "career" | "education";
 
 const SPRING = { type: "spring" as const, bounce: 0, duration: 0.35 };
 
@@ -48,6 +51,7 @@ const socialLinks = Object.entries(DATA.contact.social).filter(
 );
 
 export function ProfilePanel() {
+  const [mode, setMode] = useState<Mode>("career");
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   const reduceMotion = useReducedMotion();
 
@@ -96,8 +100,75 @@ export function ProfilePanel() {
         </a>
       </div>
 
-      <div className="mt-6 space-y-6">
-        {workGroups.map(([employmentType, items]) => (
+      <div className="relative mt-6 flex rounded-full bg-muted p-1">
+        {(["career", "education"] as const).map((m) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className="relative flex-1 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wide active:scale-[0.97]"
+          >
+            {mode === m && (
+              <motion.div
+                layoutId="panel-pill"
+                className="absolute inset-0 rounded-full bg-background shadow-sm"
+                transition={spring}
+              />
+            )}
+            <span
+              className={cn(
+                "relative z-10",
+                mode === m ? "text-foreground" : "text-muted-foreground",
+              )}
+            >
+              {m === "career" ? "Career" : "Education"}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={mode}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}
+          className="mt-6 space-y-6"
+        >
+          {mode === "education" ? (
+            <div className="relative space-y-5">
+              {DATA.education.length > 1 && (
+                <div className="absolute bottom-5 left-[19px] top-5 w-px bg-border" />
+              )}
+              {DATA.education.map((edu) => (
+                <div
+                  key={edu.school}
+                  className="relative flex items-start gap-3"
+                >
+                  <Avatar className="relative z-10 size-10 shrink-0 border bg-background">
+                    <AvatarImage
+                      src={edu.logoUrl}
+                      alt={edu.school}
+                      className="object-contain"
+                    />
+                    <AvatarFallback>{edu.school[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-semibold">
+                      {edu.school}
+                    </div>
+                    <div className="truncate text-sm text-muted-foreground">
+                      {edu.degree}
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                    {edu.start} - {edu.end}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+        workGroups.map(([employmentType, items]) => (
               <div key={employmentType}>
                 <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {employmentType}
@@ -186,8 +257,10 @@ export function ProfilePanel() {
                   })}
                 </div>
               </div>
-            ))}
-      </div>
+            ))
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
