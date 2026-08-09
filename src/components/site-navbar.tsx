@@ -8,8 +8,8 @@ import { DATA } from "../../public/data/resume";
 
 const NAV_LINKS = [
   { label: "About", href: "/" },
-  { label: "Accolades", href: "/accolades" },
   { label: "Projects", href: "/projects" },
+  { label: "Accolades", href: "/accolades" },
   { label: "Readings", href: "/readings" },
   { label: "Contact", href: "/#contact" },
 ];
