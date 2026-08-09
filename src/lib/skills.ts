@@ -3,7 +3,7 @@ import {
   TECHNOLOGIES,
   type Technology,
   type TechnologySlug,
-} from "../../public/data/skills";
+} from "../../public/data/technologies";
 
 export function getTechnologyBySlug(slug: string): Technology | undefined {
   return TECHNOLOGIES.find((technology) => technology.slug === slug);

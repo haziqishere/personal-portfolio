@@ -3,7 +3,7 @@
 import React from "react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { getTechnologyBySlug } from "@/lib/skills";
-import type { TechnologySlug } from "../../../public/data/skills";
+import type { TechnologySlug } from "../../../public/data/technologies";
 import { Highlighter } from "../ui/highlighter";
 
 const STATUS_PAGE_URL = "https://kuma.haziqhakimi.online/status/self-hosted-apps";
@@ -102,7 +102,14 @@ export function StatusShowcase() {
               them, of course!
             </h1>
             <p className="text-muted-foreground">
-              Real-time status of my self-hosted apps and data platform .
+              Real-time status of my self-hosted 
+              {" "}<Highlighter action="highlight" color="#e2ffe2" strokeWidth={1}>
+                apps
+              </Highlighter>{" "}
+              and {" "}
+              <Highlighter action="highlight" color="#e2ffe2">
+                data platform
+              </Highlighter>{" "}
             </p>
           </div>
         }

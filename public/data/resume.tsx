@@ -5,7 +5,7 @@ import {
   RocketIcon,
   CodeSquareIcon,
 } from "lucide-react";
-import type { TechnologySlug } from "./skills";
+import type { TechnologySlug } from "./technologies";
 
 const projectSkills = {
   webApp: [

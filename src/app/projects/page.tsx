@@ -4,7 +4,7 @@ import { ProjectCard } from "@/components/project-card";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "../../../public/data/resume";
 import { getTechnologyBySlug } from "@/lib/skills";
-import type { TechnologySlug } from "../../../public/data/skills";
+import type { TechnologySlug } from "../../../public/data/technologies";
 
 const BLUR_FADE_DELAY = 0.04;
 

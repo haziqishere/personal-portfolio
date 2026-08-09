@@ -28,6 +28,7 @@ export const TECHNOLOGIES = [
   { slug: "argocd", name: "ArgoCD", icon: "/icons/argocd.svg" },
   { slug: "grafana", name: "Grafana", icon: "/icons/grafana.svg" },
   { slug: "prometheus", name: "Prometheus", icon: "/icons/prometheus.svg" },
+  { slug: "cloudflrare", name: "Cloudflare", icon: "/icons/cloudflare.svg" },
 
   // Infrastructure
   { slug: "nvidia-cuda", name: "NVIDIA CUDA", icon: "/icons/cuda.svg" },

@@ -7,7 +7,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { getProjectsBySkill, getTechnologyBySlug } from "@/lib/skills";
-import type { TechnologySlug } from "../../../public/data/skills";
+import type { TechnologySlug } from "../../../public/data/technologies";
 
 const PREVIEW_LIMIT = 3;
 
