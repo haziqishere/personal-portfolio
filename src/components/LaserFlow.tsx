@@ -380,7 +380,7 @@ export const LaserFlow: React.FC<Props> = ({
       uDecay: { value: decay },
       uFalloffStart: { value: falloffStart },
       uFogFallSpeed: { value: fogFallSpeed },
-      uColor: { value: new THREE.Vector3(1, 1, 1) },
+      uColor: { value: (() => { const { r, g, b } = hexToRGB(color); return new THREE.Vector3(r, g, b); })() },
       uFade: { value: 1 }
     };
     uniformsRef.current = uniforms;

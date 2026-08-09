@@ -53,7 +53,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           which nesting inside a *different* items-center parent breaks. */}
       <section className="relative -mx-[50vw] left-[50%] right-[50%] -mt-12 flex w-screen flex-col items-center gap-8 overflow-hidden bg-black px-4 pb-16 pt-16 text-center sm:-mt-24">
         <div aria-hidden="true" className="absolute inset-0 z-0">
-          {/* <LightPillar
+          <LightPillar
             topColor={PILLAR_TOP_COLOR}
             bottomColor={PILLAR_BOTTOM_COLOR}
             intensity={0.8}
@@ -66,7 +66,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
             interactive={false}
             mixBlendMode="screen"
             quality="high"
-        /> */}
+        />
         </div>
 
         <BlurFade delay={BLUR_FADE_DELAY}>
