@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
 import { DATA } from "../../public/data/resume";
 
 const NAV_LINKS = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
+  { label: "About", href: "/" },
   { label: "Accolades", href: "/accolades" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "Projects", href: "/projects" },
+  { label: "Readings", href: "/readings" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export function SiteNavbar() {
@@ -42,13 +42,13 @@ export function SiteNavbar() {
 
         <nav className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-xs font-medium uppercase tracking-wide text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
