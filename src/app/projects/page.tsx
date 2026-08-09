@@ -8,6 +8,7 @@ import { getTechnologyBySlug } from "@/lib/skills";
 import type { TechnologySlug } from "../../../public/data/technologies";
 import LightPillar from "@/components/LightPillar";
 import { FloatingKubernetesLogos } from "@/components/floating-kubernetes";
+import LaserFlow from "@/components/LaserFlow";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -52,7 +53,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           which nesting inside a *different* items-center parent breaks. */}
       <section className="relative -mx-[50vw] left-[50%] right-[50%] -mt-12 flex w-screen flex-col items-center gap-8 overflow-hidden bg-black px-4 pb-16 pt-16 text-center sm:-mt-24">
         <div aria-hidden="true" className="absolute inset-0 z-0">
-          <LightPillar
+          {/* <LightPillar
             topColor={PILLAR_TOP_COLOR}
             bottomColor={PILLAR_BOTTOM_COLOR}
             intensity={0.8}
@@ -65,7 +66,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
             interactive={false}
             mixBlendMode="screen"
             quality="high"
-        />
+        /> */}
         </div>
 
         <BlurFade delay={BLUR_FADE_DELAY}>
@@ -82,15 +83,6 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
 
         <FloatingKubernetesLogos topColor={PILLAR_TOP_COLOR} bottomColor={PILLAR_BOTTOM_COLOR} />
 
-        {/* Simple concentrated beam shooting bottom-up, based 10px above
-            the section's true bottom edge — separate from LightPillar's
-            own ambient fractal glow, this is just a plain CSS gradient. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-0 z-0 w-24 -translate-x-1/2 bg-gradient-to-t from-blue-400/80 via-blue-500/25 to-transparent blur-2xl"
-          style={{ bottom: "10px" }}
-        />
-
         {/* Fills the bottom of the dark hero with the page's normal
             background. Sits above the rays (z-0) but below the mockup
             (z-10), so the mockup's lower half visually rests on this white
@@ -99,6 +91,36 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         <div
           aria-hidden="true"
           className="absolute inset-x-0 bottom-0 z-[1] h-64 bg-background"
+        />
+
+        {/* Laser beam pours down and lands on Safari — direct child of the
+            section, not nested in an extra wrapper div (nesting it left
+            the canvas dark/invisible — unresolved why). inset-0 fills the
+            section (already a 100vw positioned ancestor via its own
+            -mx-[50vw] trick). z-0 sits below the white strip (z-[1]) and
+            the mockup (z-10), so both occlude the beam where they overlap
+            it — the illusion the light lands behind them.
+            verticalBeamOffset: the section is headline + logos + gaps
+            (~40% of its height) before Safari even starts, so the impact
+            point (local y=0) needs pulling well down from center — raising
+            this value moves the impact point *up*, not down. */}
+        <LaserFlow
+          className="pointer-events-none absolute inset-0 z-0"
+          color="#CF9EFF"
+          horizontalBeamOffset={0}
+          verticalBeamOffset={0.08}
+          horizontalSizing={2.2}
+          verticalSizing={1.6}
+          wispDensity={0.8}
+          wispSpeed={12}
+          wispIntensity={4}
+          flowSpeed={0.4}
+          flowStrength={0.25}
+          fogIntensity={0.3}
+          fogScale={0.12}
+          fogFallSpeed={0.24}
+          decay={1.1}
+          falloffStart={1.3}
         />
 
         <div className="relative z-10 mx-auto mt-12 w-full max-w-6xl">
