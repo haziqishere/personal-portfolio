@@ -168,6 +168,7 @@ export const DATA = {
       href: "https://chatcollect.com",
       dates: "Jan 2024 - Feb 2024",
       active: true,
+      is_selected_work: true,
       description:
         "With the release of the [OpenAI GPT Store](https://openai.com/blog/introducing-the-gpt-store), I decided to build a SaaS which allows users to collect email addresses from their GPT users. This is a great way to build an audience and monetize your GPT API usage.",
       technologies: [
@@ -197,6 +198,7 @@ export const DATA = {
       href: "https://magicui.design",
       dates: "June 2023 - Present",
       active: true,
+      is_selected_work: true,
       description:
         "Designed, developed and sold animated UI components for developers.",
       technologies: [
@@ -230,6 +232,7 @@ export const DATA = {
       href: "https://llm.report",
       dates: "April 2023 - September 2023",
       active: true,
+      is_selected_work: true,
       description:
         "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
       technologies: [
@@ -264,6 +267,7 @@ export const DATA = {
       href: "https://automatic.chat",
       dates: "April 2023 - March 2024",
       active: true,
+      is_selected_work: true,
       description:
         "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
       technologies: [
