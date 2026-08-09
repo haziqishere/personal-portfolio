@@ -10,7 +10,6 @@ import Markdown from "react-markdown";
 import Bento from "@/components/bento components/bento";
 
 import { ETLPipelineShowcase } from "@/components/pipeline/container-scroll";
-import HackathonTimeline from "@/components/hackathon/timeline";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { WavyBackgroundSection } from "@/components/cta/wavy-background";
 import { VortexSection } from "@/components/cta/vortext-section";
@@ -63,10 +62,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Hackathon Timeline */}
-      <section className="py-2" id="hackathons">
-        <HackathonTimeline />
-      </section>
       {/* ETL Pipeline */}
       <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden bg-gradient-to-b from-white to-slate-50">
         <ETLPipelineShowcase />
