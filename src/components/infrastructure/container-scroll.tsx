@@ -87,10 +87,10 @@ export function StatusShowcase() {
         titleComponent={
           <div className="max-w-5xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-center mb-4">
-              Learn by hands-on: Self-hosted apps status
+              How do I learn new things? By self-hosting them, of course!
             </h1>
             <p className="text-muted-foreground">
-              Real-time uptime for the apps I self-host
+              Real-time status of my self-hosted apps and data platform .
             </p>
           </div>
         }
