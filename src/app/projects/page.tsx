@@ -7,6 +7,7 @@ import { DATA } from "../../../public/data/resume";
 import { getTechnologyBySlug } from "@/lib/skills";
 import type { TechnologySlug } from "../../../public/data/technologies";
 import LightPillar from "@/components/LightPillar";
+import { FloatingKubernetesLogos } from "@/components/floating-kubernetes";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -14,13 +15,11 @@ const BLUR_FADE_DELAY = 0.04;
 // for the Grafana dashboard until that's ready.
 const STATUS_PAGE_URL = "https://kuma.haziqhakimi.online/status/self-hosted-apps";
 
-// The actual stack this page itself is built with — not a generic dev-icon
-// assortment. Three, matching the restraint of the reference (not five).
-const FLOAT_ICONS: Array<{ slug: TechnologySlug; delay: number; duration: number }> = [
-  { slug: "nextjs", delay: -1, duration: 5 },
-  { slug: "typescript", delay: -2.5, duration: 4.5 },
-  { slug: "react", delay: -0.5, duration: 5.5 },
-];
+// Shared between LightPillar and FloatingKubernetesLogos so the logos
+// always read as lit by the same beam, never drifting out of sync if
+// either gets retuned later.
+const PILLAR_TOP_COLOR = "#5227FF";
+const PILLAR_BOTTOM_COLOR = "#FF9FFC";
 
 interface ProjectsPageProps {
   searchParams: { skill?: string };
@@ -54,8 +53,8 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
       <section className="relative -mx-[50vw] left-[50%] right-[50%] -mt-12 flex w-screen flex-col items-center gap-8 overflow-hidden bg-black px-4 pb-16 pt-16 text-center sm:-mt-24">
         <div aria-hidden="true" className="absolute inset-0 z-0">
           <LightPillar
-            topColor="#5227FF"
-            bottomColor="#FF9FFC"
+            topColor={PILLAR_TOP_COLOR}
+            bottomColor={PILLAR_BOTTOM_COLOR}
             intensity={0.8}
             rotationSpeed={0.3}
             glowAmount={0.002}
@@ -72,7 +71,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         <BlurFade delay={BLUR_FADE_DELAY}>
           <div className="relative z-10 mx-auto max-w-2xl space-y-3">
             <h1 className="text-4xl font-bold tracking-tighter text-white sm:text-5xl">
-              I build things, then I run them myself
+              I build things and mantain infra myself
             </h1>
             <p className="text-white/60 md:text-lg">
               From SaaS products to the homelab powering my own infrastructure
@@ -81,27 +80,16 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           </div>
         </BlurFade>
 
+        <FloatingKubernetesLogos topColor={PILLAR_TOP_COLOR} bottomColor={PILLAR_BOTTOM_COLOR} />
+
+        {/* Simple concentrated beam shooting bottom-up, based 10px above
+            the section's true bottom edge — separate from LightPillar's
+            own ambient fractal glow, this is just a plain CSS gradient. */}
         <div
           aria-hidden="true"
-          className="relative z-10 flex flex-wrap items-center justify-center gap-4"
-        >
-          {FLOAT_ICONS.map((spec) => {
-            const tech = getTechnologyBySlug(spec.slug);
-            if (!tech) return null;
-            return (
-              <div
-                key={spec.slug}
-                className="float-icon flex size-11 items-center justify-center rounded-full border bg-white/90 p-2.5 shadow-md dark:bg-zinc-800/90"
-                style={{
-                  animation: `float ${spec.duration}s ease-in-out infinite`,
-                  animationDelay: `${spec.delay}s`,
-                }}
-              >
-                <img src={tech.icon} alt="" className="h-full w-full object-contain" />
-              </div>
-            );
-          })}
-        </div>
+          className="pointer-events-none absolute left-1/2 top-0 z-0 w-24 -translate-x-1/2 bg-gradient-to-t from-blue-400/80 via-blue-500/25 to-transparent blur-2xl"
+          style={{ bottom: "10px" }}
+        />
 
         {/* Fills the bottom of the dark hero with the page's normal
             background. Sits above the rays (z-0) but below the mockup
@@ -113,7 +101,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           className="absolute inset-x-0 bottom-0 z-[1] h-64 bg-background"
         />
 
-        <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="relative z-10 mx-auto mt-12 w-full max-w-6xl">
           <Safari url="kuma.haziqhakimi.online" className="w-full">
             <iframe
               src={STATUS_PAGE_URL}
