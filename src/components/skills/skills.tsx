@@ -1,196 +1,121 @@
-// src/components/skills/skills-grid.tsx
 "use client";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { getProjectsBySkill } from "@/lib/skills";
+import {
+  SKILLS,
+  SKILL_CATEGORIES,
+  type SkillCategorySlug,
+  type SkillSlug,
+} from "../../../public/data/skills";
 
-interface SkillItem {
-  name: string;
-  icon: string; // Path to SVG
-}
+const PREVIEW_LIMIT = 3;
 
-interface SkillCategory {
-  title: string;
-  description: string;
-  skills: SkillItem[];
-  color: string; // For category accent
+function SkillPreviewCard({ slug, name }: { slug: SkillSlug; name: string }) {
+  const projects = getProjectsBySkill(slug, PREVIEW_LIMIT + 1);
+  const preview = projects.slice(0, PREVIEW_LIMIT);
+  const hasMore = projects.length > PREVIEW_LIMIT;
+
+  return (
+    <HoverCardContent className="w-56 p-3">
+      <p className="text-xs font-semibold">{name}</p>
+      {preview.length > 0 ? (
+        <ul className="mt-2 space-y-1">
+          {preview.map((project) => (
+            <li key={project.title}>
+              <Link
+                href={project.href || "#"}
+                className="text-xs text-muted-foreground hover:text-foreground hover:underline"
+              >
+                {project.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-xs text-muted-foreground">
+          No projects yet.
+        </p>
+      )}
+      {preview.length > 0 && (
+        <Link
+          href={`/projects?skill=${slug}`}
+          className="mt-3 block text-xs font-medium text-blue-500 hover:underline"
+        >
+          {hasMore ? "View more →" : "View project →"}
+        </Link>
+      )}
+    </HoverCardContent>
+  );
 }
 
 export function SkillsGrid() {
-  const skillCategories: SkillCategory[] = [
-    {
-      title: "Languages",
-      description: "Primary programming languages",
-      color: "from-yellow-500/20 to-orange-500/20",
-      skills: [
-        { name: "Python", icon: "/icons/python.svg" },
-        { name: "Java", icon: "/icons/java.svg" },
-        { name: "SQL", icon: "/icons/sql.svg" },
-      ],
-    },
-    {
-      title: "Platform",
-      description: "Data processing and building ETL",
-      color: "from-red-500/20 to-yellow-500/20",
-      skills: [
-        { name: "Terraform", icon: "/icons/terraform.svg" },
-        { name: "Kubernetes", icon: "/icons/kubernetes.svg" },
-        { name: "DigitalOcean", icon: "/icons/digitalocean.svg" },
-        { name: "AWS", icon: "/icons/aws.svg" },
-        { name: "GCP", icon: "/icons/gcp.svg" },
-        { name: "ArgoCD", icon: "/icons/argocd.svg" },
-      ],
-    },
-    {
-      title: "Technology and Tools",
-      description: "Development and deployment tools. Iaas and PaaS",
-      color: "from-purple-500/20 to-red-500/20",
-      skills: [
-        { name: "Git", icon: "/icons/git.svg" },
-        { name: "GitLab", icon: "/icons/gitlab.svg" },
-        { name: "Docker", icon: "/icons/docker.svg" },
-        { name: "Linux", icon: "/icons/linux.svg" },
-        { name: "Podman", icon: "/icons/podman.svg" },
-        { name: "Insomnia", icon: "/icons/insomnia.svg" },
-      ],
-    },
-    {
-      title: "Data Engineering",
-      description: "Data processing and building ETL",
-      color: "from-red-500/20 to-yellow-500/20",
-      skills: [
-        { name: "Apache Airflow", icon: "/icons/airflow.svg" },
-        { name: "Prefect", icon: "/icons/prefect.svg" },
-        { name: "Snowflake", icon: "/icons/snowflake.svg" },
-        { name: "Apache Kafka", icon: "/icons/kafka.svg" },
-        { name: "Trino", icon: "/icons/trino.svg" },
-        { name: "Apache Iceberg", icon: "/icons/iceberg.svg" },
-        { name: "Apache Spark", icon: "/icons/spark.svg" },
-        { name: "Redis", icon: "/icons/redis.svg" },
-        { name: "Great Expectations", icon: "/icons/gx.svg" },
-        { name: "Dbt", icon: "/icons/dbt.svg" },
-        { name: "Postgres", icon: "/icons/postgresql.svg" },
-      ],
-    },
-
-    {
-      title: "DS/ML Engineering",
-      description: "Data analysis and machine learning",
-      color: "from-green-500/20 to-blue-500/20",
-      skills: [
-        { name: "TensorFlow", icon: "/icons/tensorflow.svg" },
-        { name: "PyTorch", icon: "/icons/pytorch.svg" },
-        { name: "Weights & Biases", icon: "/icons/wandb.svg" },
-        { name: "Kubeflow", icon: "/icons/kubeflow.svg" },
-        { name: "Ray", icon: "/icons/ray.svg" },
-        { name: "RapidMiner", icon: "/icons/rapidminer.png" },
-        { name: "Tableu", icon: "/icons/tableu.svg" },
-      ],
-    },
-  ];
+  const categorySlugs = Object.keys(SKILL_CATEGORIES) as SkillCategorySlug[];
 
   return (
-    <div className="w-full max-w-4xl mx-auto py-4">
-      <div className="grid grid-cols-1 gap-6">
-        {/* Top row with 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {skillCategories.slice(0, 3).map((category, idx) => (
+    <div className="w-full py-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {categorySlugs.map((categorySlug, idx) => {
+          const category = SKILL_CATEGORIES[categorySlug];
+          const skills = SKILLS.filter((skill) => skill.category === categorySlug);
+          if (skills.length === 0) return null;
+
+          return (
             <motion.div
-              key={category.title}
+              key={categorySlug}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
-              className="group relative rounded-xl p-6 bg-white/5 hover:bg-white/10 
-                                         border border-gray-200 hover:border-gray-300 
-                                         transition-all duration-300 shadow-sm hover:shadow-md"
+              className="group relative rounded-xl p-6 bg-white/5 hover:bg-white/10
+                         border border-gray-200 hover:border-gray-300
+                         transition-all duration-300 shadow-sm hover:shadow-md"
             >
-              {/* Category Header */}
               <div className="mb-4">
                 <h3 className="text-lg font-semibold">{category.title}</h3>
                 <p className="text-sm text-gray-500">{category.description}</p>
               </div>
 
-              {/* Skills Grid */}
-              <div className="grid grid-cols-3 gap-3">
-                {category.skills.map((skill) => (
-                  <motion.div
-                    key={skill.name}
-                    whileHover={{ scale: 1.05 }}
-                    className="flex flex-col items-center gap-2 p-2 rounded-lg
-                                                     hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <div className="w-8 h-8">
-                      <img
-                        src={skill.icon}
-                        alt={skill.name}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <span className="text-xs text-center font-medium">
-                      {skill.name}
-                    </span>
-                  </motion.div>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <HoverCard key={skill.slug} openDelay={150} closeDelay={100}>
+                    <HoverCardTrigger asChild>
+                      <motion.div
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="flex items-center gap-1.5 rounded-full border border-gray-200
+                                   px-3 py-1.5 hover:bg-gray-50 hover:border-gray-300
+                                   transition-colors duration-200 cursor-pointer"
+                      >
+                        <div className="w-4 h-4 shrink-0">
+                          <img
+                            src={skill.icon}
+                            alt={skill.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <span className="text-xs font-medium whitespace-nowrap">
+                          {skill.name}
+                        </span>
+                      </motion.div>
+                    </HoverCardTrigger>
+                    <SkillPreviewCard slug={skill.slug} name={skill.name} />
+                  </HoverCard>
                 ))}
               </div>
 
-              {/* Category Background Gradient */}
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${category.color} 
-                                                     opacity-0 group-hover:opacity-100 transition-opacity 
-                                                     duration-500 -z-10 rounded-xl`}
+                className={`absolute inset-0 bg-gradient-to-br ${category.color}
+                           opacity-0 group-hover:opacity-100 transition-opacity
+                           duration-500 -z-10 rounded-xl`}
               />
             </motion.div>
-          ))}
-        </div>
-
-        {/* Bottom row with 2 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {skillCategories.slice(3).map((category, idx) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: (idx + 3) * 0.1 }}
-              className="group relative rounded-xl p-6 bg-white/5 hover:bg-white/10 
-                                         border border-gray-200 hover:border-gray-300 
-                                         transition-all duration-300 shadow-sm hover:shadow-md"
-            >
-              {/* Category Header */}
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold">{category.title}</h3>
-                <p className="text-sm text-gray-500">{category.description}</p>
-              </div>
-
-              {/* Skills Grid */}
-              <div className="grid grid-cols-3 gap-3">
-                {category.skills.map((skill) => (
-                  <motion.div
-                    key={skill.name}
-                    whileHover={{ scale: 1.05 }}
-                    className="flex flex-col items-center gap-2 p-2 rounded-lg
-                                                     hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <div className="w-8 h-8">
-                      <img
-                        src={skill.icon}
-                        alt={skill.name}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <span className="text-xs text-center font-medium">
-                      {skill.name}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Category Background Gradient */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${category.color} 
-                                                     opacity-0 group-hover:opacity-100 transition-opacity 
-                                                     duration-500 -z-10 rounded-xl`}
-              />
-            </motion.div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );

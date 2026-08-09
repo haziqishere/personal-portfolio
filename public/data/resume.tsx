@@ -5,6 +5,17 @@ import {
   RocketIcon,
   CodeSquareIcon,
 } from "lucide-react";
+import type { SkillSlug } from "./skills";
+
+const projectSkills = {
+  webApp: [
+    "nextjs",
+    "typescript",
+    "postgresql",
+    "prisma",
+    "tailwindcss",
+  ] as SkillSlug[],
+};
 
 export const DATA = {
   name: "Haziq Hakimi",
@@ -86,6 +97,9 @@ export const DATA = {
           title: "Data Engineer",
           period: "Sep 2025 - Current",
           badges: [],
+          employmentType: "Full-time",
+          // TODO: fill in with slugs from public/data/skills.tsx SKILLS
+          skills: [] as SkillSlug[],
           description:
             "- Worked in Fraud Data and Engineering team for National Fraud Portal (NFP) in collaboration with Bank Negara\n- Using Ray to better manage the ML pipeline and model deployment\n- Increase Data Scientist and Data Engineers efficiency by building monitoring and alerting system for ML Pipeline and Data Pipeline to better manage the model performance and data quality.",
         },
@@ -93,6 +107,9 @@ export const DATA = {
           title: "Data Engineer Intern",
           period: "March 2025 - Aug 2025",
           badges: [],
+          employmentType: "Internship",
+          // TODO: fill in with slugs from public/data/skills.tsx SKILLS
+          skills: [] as SkillSlug[],
           description:
             "- Worked in Fraud Data and Engineering team for National Fraud Portal (NFP) in collaboration with Bank Negara\n- Built data pipelines for ML Development by aggregating MyDebit and FPX transactions into Iceberg Table in Data Lake using Prefect running on AWS EKS. \n- Expand the Dataset for Fraud Detection ML to 150% \n- Increase fraudulent money trailing to 50% more (Just dummy numbers)",
         },
@@ -110,6 +127,9 @@ export const DATA = {
           title: "Full Stack Web Developer Intern",
           period: "Aug 2024 - Oct 2024",
           badges: [],
+          employmentType: "Internship",
+          // TODO: fill in with slugs from public/data/skills.tsx SKILLS
+          skills: [] as SkillSlug[],
           description:
             "Developed ecommerce website for client using Next.js, TailwindCSS, and Strapi for the front-end & utilizes AWS services such as Amazon RDS and S3 for the back-end. Built RESTFUL API for admin to upload new product into postgreSQL database and AWS S3 for storing product images enabling low-cost maintanence.",
         },
@@ -152,6 +172,7 @@ export const DATA = {
         "Shadcn UI",
         "Magic UI",
       ],
+      skills: projectSkills.webApp,
       links: [
         {
           type: "Website",
@@ -180,6 +201,7 @@ export const DATA = {
         "Shadcn UI",
         "Magic UI",
       ],
+      skills: projectSkills.webApp,
       links: [
         {
           type: "Website",
@@ -213,6 +235,7 @@ export const DATA = {
         "Stripe",
         "Cloudflare Workers",
       ],
+      skills: projectSkills.webApp,
       links: [
         {
           type: "Website",
@@ -246,6 +269,7 @@ export const DATA = {
         "Stripe",
         "Cloudflare Workers",
       ],
+      skills: projectSkills.webApp,
       links: [
         {
           type: "Website",

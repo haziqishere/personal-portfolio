@@ -11,70 +11,59 @@ import Markdown from "react-markdown";
 import Bento from "@/components/bento components/bento";
 
 import { ETLPipelineShowcase } from "@/components/pipeline/container-scroll";
-import RolesCarousel from "@/components/roles/carousel";
 import HackathonTimeline from "@/components/hackathon/timeline";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { WavyBackgroundSection } from "@/components/cta/wavy-background";
 import { VortexSection } from "@/components/cta/vortext-section";
-import { BackgroundBeamSection } from "@/components/hero/background-beam";
 import { SkillsGrid } from "@/components/skills/skills";
-import { WorkExperienceSection } from "@/components/work-experience";
+import { ProfilePanel } from "@/components/profile/panel";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
-    <main className="flex flex-col min-h-[100dvh] space-y-10 ">
-      {/* Background Beam Section */}
-      <section className="relative">
-        <BackgroundBeamSection />
-      </section>
-      <section
-        id="bento"
-        className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden"
-      >
-        {/* Base gradient layer */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-white to-transparent">
-          {/* Gradient circles */}
-          <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-gradient-to-r from-blue-400/20 to-purple-500/20 blur-[120px] animate-pulse hover:animate-[pulse_5s_ease-in-out_forwards] hover:w-[50%] hover:h-[50%]" />
-          <div className="absolute top-[20%] right-[-5%] w-[40%] h-[40%] rounded-full bg-gradient-to-l from-purple-400/20 to-pink-500/20 blur-[120px] animate-pulse delay-[2s] hover:animate-[pulse_5s_ease-in-out_forwards] hover:w-[50%] hover:h-[50%]" />
+    <main className="flex flex-col min-h-[100dvh] space-y-10">
+      {/* Profile Panel + About + Skills row */}
+      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen">
+        <div className="max-w-6xl mx-auto px-6 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16 lg:items-start">
+          <div>
+            <BlurFade delay={BLUR_FADE_DELAY}>
+              <ProfilePanel />
+            </BlurFade>
+          </div>
 
-          {/* SVG Circle pattern overlay */}
-          <div className="absolute inset-0 bg-[url('/public/images/circles.svg')] bg-cover bg-center opacity-50" />
-        </div>
-        {/* Content container */}
-        <div className="relative mx-auto max-w-4xl pt-24 md:pt-32 px-6"></div>ß
-        {/* Bottom fade effect */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
-        {/* Bento */}
-        <div className="pb-24">
-          <Bento />
-        </div>
-      </section>
-      {/* Apple Carousel */}
-      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen -mt-12 sm:-mt-24 overflow-hidden ">
-        <RolesCarousel />
-      </section>
-      <BlurFade delay={BLUR_FADE_DELAY * 3}>
-        <h2 className="max-w-7xl mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-          About Me
-        </h2>
-      </BlurFade>
+          <div className="mt-10 flex flex-col space-y-10 lg:mt-0">
+            <BlurFade delay={BLUR_FADE_DELAY * 3}>
+              <h2 className="text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+                About Me
+              </h2>
+            </BlurFade>
 
-      {/* About Section */}
-      <section id="about">
-        <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-            {DATA.summary}
-          </Markdown>
-        </BlurFade>
+            {/* About Section */}
+            <section id="about">
+              <BlurFade delay={BLUR_FADE_DELAY * 4}>
+                <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
+                  {DATA.summary}
+                </Markdown>
+              </BlurFade>
+            </section>
+
+            <section id="skills">
+              <div className="flex min-h-0 flex-col">
+                <BlurFade delay={BLUR_FADE_DELAY * 9}>
+                  <h2 className="text-xl font-bold">Skills</h2>
+                </BlurFade>
+                <div className="flex flex-wrap">
+                  <BlurFade delay={BLUR_FADE_DELAY * 10}>
+                    <SkillsGrid />
+                  </BlurFade>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
       </section>
-      <section id="work">
-        <WorkExperienceSection
-          experiences={DATA.work}
-          blurFadeDelay={BLUR_FADE_DELAY * 5}
-        />
-      </section>
+
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
@@ -99,18 +88,6 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="skills">
-        <div className="flex min-h-0 flex-col">
-          <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className="text-xl font-bold">Skills</h2>
-          </BlurFade>
-          <div className="flex flex-wrap">
-            <BlurFade delay={BLUR_FADE_DELAY * 10}>
-              <SkillsGrid />
-            </BlurFade>
-          </div>
-        </div>
-      </section>
       {/* Hackathon Timeline */}
       <section className="py-2" id="hackathons">
         <HackathonTimeline />
