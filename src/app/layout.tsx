@@ -1,4 +1,5 @@
 import Navbar from "@/components/navbar";
+import { SiteNavbar } from "@/components/site-navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "../../public/data/resume";
@@ -65,6 +66,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
             <main className="relative w-full">
+              <SiteNavbar />
               <div className="max-w-4xl mx-auto px-6 py-12 sm:py-24 ">
                 {children}
                 <Navbar />
