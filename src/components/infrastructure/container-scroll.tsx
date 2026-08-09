@@ -4,6 +4,7 @@ import React from "react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { getTechnologyBySlug } from "@/lib/skills";
 import type { TechnologySlug } from "../../../public/data/skills";
+import { Highlighter } from "../ui/highlighter";
 
 const STATUS_PAGE_URL = "https://kuma.haziqhakimi.online/status/self-hosted-apps";
 
@@ -84,12 +85,21 @@ export function StatusShowcase() {
       <ContainerScroll
         decoration={<OrbitingLogos />}
         trackHeight="110vh"
-        headerParallax={40}
+        // 0, not just "small": the title has a rough-notation Highlighter
+        // in it, which positions its underline via a one-time
+        // getBoundingClientRect() call. It doesn't track CSS transforms,
+        // so any scroll-driven translateY on this header desyncs the
+        // underline from the text as you scroll. Keep this header static.
+        headerParallax={0}
         cardOffset={24}
         titleComponent={
           <div className="max-w-5xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-center mb-4">
-              How do I learn new things? By self-hosting them, of course!
+              How do I learn new things? By{" "}
+              <Highlighter action="underline" color="#FF9800">
+                self-hosting
+              </Highlighter>{" "}
+              them, of course!
             </h1>
             <p className="text-muted-foreground">
               Real-time status of my self-hosted apps and data platform .
