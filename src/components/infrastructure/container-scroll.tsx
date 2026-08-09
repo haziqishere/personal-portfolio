@@ -33,6 +33,7 @@ const LEFT_ORBIT: OrbitSpec[] = [
   // bottom-left cluster
   { slug: "nvidia-cuda", top: "76%", inset: "6%", radius: 40, duration: 29, delay: -14, sizeClass: "size-14" },
   { slug: "raspberry-pi", top: "90%", inset: "3%", radius: 50, duration: 23, delay: -19, sizeClass: "size-20" },
+  { slug: "cloudflare", top: "50%", inset: "10%", radius: 40, duration: 23, delay: -15, sizeClass: "size-20" },
 ];
 
 const RIGHT_ORBIT: OrbitSpec[] = [
