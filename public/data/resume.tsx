@@ -30,6 +30,14 @@ export const DATA = {
     "roles such as being Computer Science Faculty Representative Council and represented my university in intervarsity sport competition. My proudest achievement is being champion in both UM Hackathon 2024 and Sukan " +
     "Institusi Pendidikan Tinggi (SUKIPT) 2024 while representing Universiti Putra Malaysia. It highlights my competitive nature of whether sports or hackathon, I always strive to be the best.",
   avatarUrl: "/me.jpg",
+  certifications: [
+    {
+      name: "AWS Cloud Solutions Architect",
+      issuer: "AWS",
+      badgeIcon: "/data/badge/aws-sa.svg",
+      url: "https://www.credly.com/badges/1b3bdd4d-2ba4-47e0-9c2e-3e0bb1e4cf7e/linked_in?t=t82a5q",
+    },
+  ],
   skills: [
     "React",
     "Next.js",

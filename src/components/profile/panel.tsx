@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { Award } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -53,19 +54,20 @@ function formatDuration(period: string): string {
   return parts.join(" ");
 }
 
-function flattenWork() {
-  return DATA.work.flatMap((company) =>
-    company.roles.map((role) => ({
+function groupWork() {
+  return DATA.work.map((company) => ({
+    key: company.company,
+    company: company.company,
+    logoUrl: company.logoUrl,
+    roles: company.roles.map((role) => ({
       key: `${company.company}-${role.title}`,
-      company: company.company,
-      logoUrl: company.logoUrl,
       title: role.title,
       period: role.period,
       isCurrent: role.period.toLowerCase().includes("current"),
       skills: role.skills,
       description: role.description,
     })),
-  );
+  }));
 }
 
 const socialLinks = Object.entries(DATA.contact.social).filter(
@@ -77,20 +79,40 @@ export function ProfilePanel() {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   const reduceMotion = useReducedMotion();
 
-  const workItems = flattenWork();
+  const workCompanies = groupWork();
   const spring = reduceMotion ? { duration: 0 } : SPRING;
 
   return (
     <div className="mx-auto flex h-full w-full max-w-sm flex-col rounded-3xl border bg-card p-5 shadow-sm">
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-muted">
         <Image
-          src={DATA.avatarUrl}
+          src="/mypic/swe.jpg"
           alt={DATA.name}
           fill
           sizes="384px"
-          className="object-cover"
+          className="scale-150 object-cover object-center"
           priority
         />
+        {DATA.certifications.length > 0 && (
+          <div className="absolute bottom-3 left-3 flex gap-2">
+            {DATA.certifications.map((cert) => (
+              <a
+                key={cert.name}
+                href={cert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={cert.name}
+                className="flex size-16 items-center justify-center rounded-full border-2 border-white bg-white shadow-lg transition-transform hover:scale-105 active:scale-[0.97] dark:border-zinc-900 dark:bg-zinc-900"
+              >
+                {cert.badgeIcon ? (
+                  <img src={cert.badgeIcon} alt={cert.name} className="size-[52px] object-contain" />
+                ) : (
+                  <Award className="size-7 text-muted-foreground" />
+                )}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mt-4">
@@ -189,90 +211,98 @@ export function ProfilePanel() {
             </div>
           ) : (
                 <div className="relative space-y-5">
-                  {workItems.length > 1 && (
+                  {workCompanies.length > 1 && (
                     <div className="absolute bottom-5 left-[19px] top-5 w-px bg-border" />
                   )}
-                  {workItems.map((item) => {
-                    const expanded = expandedKey === item.key;
-                    return (
-                      <div key={item.key} className="relative">
-                        <button
-                          onClick={() =>
-                            setExpandedKey(expanded ? null : item.key)
-                          }
-                          className="flex w-full items-start gap-3 text-left active:scale-[0.99]"
-                        >
-                          <Avatar className="relative z-10 size-10 shrink-0 border bg-background">
-                            <AvatarImage
-                              src={item.logoUrl}
-                              alt={item.company}
-                              className="object-contain"
-                            />
-                            <AvatarFallback>{item.company[0]}</AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                              <span className="text-sm font-semibold">
-                                {item.company}
-                              </span>
-                              {item.isCurrent && (
-                                <Badge
-                                  variant="secondary"
-                                  className="border-transparent bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                  {workCompanies.map((company) => (
+                    <div key={company.key} className="relative flex items-start gap-3">
+                      <Avatar className="relative z-10 size-10 shrink-0 border bg-background">
+                        <AvatarImage
+                          src={company.logoUrl}
+                          alt={company.company}
+                          className="object-contain"
+                        />
+                        <AvatarFallback>{company.company[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-semibold">
+                          {company.company}
+                        </div>
+                        <div className="mt-2 space-y-3">
+                          {company.roles.map((role) => {
+                            const expanded = expandedKey === role.key;
+                            return (
+                              <div key={role.key}>
+                                <button
+                                  onClick={() =>
+                                    setExpandedKey(expanded ? null : role.key)
+                                  }
+                                  className="flex w-full items-start text-left active:scale-[0.99]"
                                 >
-                                  Current
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {item.title}
-                            </div>
-                            <div className="mt-0.5 text-xs tabular-nums text-muted-foreground">
-                              {item.period}
-                            </div>
-                          </div>
-                          <div className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                            {formatDuration(item.period)}
-                          </div>
-                        </button>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                      <span className="text-sm text-muted-foreground">
+                                        {role.title}
+                                      </span>
+                                      {role.isCurrent && (
+                                        <Badge
+                                          variant="secondary"
+                                          className="border-transparent bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                                        >
+                                          Current
+                                        </Badge>
+                                      )}
+                                    </div>
+                                    <div className="mt-0.5 text-xs tabular-nums text-muted-foreground">
+                                      {role.period}
+                                    </div>
+                                  </div>
+                                  <div className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                                    {formatDuration(role.period)}
+                                  </div>
+                                </button>
 
-                        {item.skills.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1.5 pl-[52px]">
-                            {item.skills.map((slug) => {
-                              const skill = getTechnologyBySlug(slug);
-                              if (!skill) return null;
-                              return (
-                                <Tooltip key={slug}>
-                                  <TooltipTrigger asChild>
-                                    <img
-                                      src={skill.icon}
-                                      alt={skill.name}
-                                      className="size-4 object-contain"
-                                    />
-                                  </TooltipTrigger>
-                                  <TooltipContent>{skill.name}</TooltipContent>
-                                </Tooltip>
-                              );
-                            })}
-                          </div>
-                        )}
+                                {role.skills.length > 0 && (
+                                  <div className="mt-2 flex flex-wrap gap-1.5">
+                                    {role.skills.map((slug) => {
+                                      const skill = getTechnologyBySlug(slug);
+                                      if (!skill) return null;
+                                      return (
+                                        <Tooltip key={slug}>
+                                          <TooltipTrigger asChild>
+                                            <img
+                                              src={skill.icon}
+                                              alt={skill.name}
+                                              className="size-4 object-contain"
+                                            />
+                                          </TooltipTrigger>
+                                          <TooltipContent>{skill.name}</TooltipContent>
+                                        </Tooltip>
+                                      );
+                                    })}
+                                  </div>
+                                )}
 
-                        <motion.div
-                          initial={false}
-                          animate={{
-                            height: expanded ? "auto" : 0,
-                            opacity: expanded ? 1 : 0,
-                          }}
-                          transition={spring}
-                          className="overflow-hidden pl-[52px]"
-                        >
-                          <p className="mt-2 whitespace-pre-line text-xs text-muted-foreground">
-                            {item.description}
-                          </p>
-                        </motion.div>
+                                <motion.div
+                                  initial={false}
+                                  animate={{
+                                    height: expanded ? "auto" : 0,
+                                    opacity: expanded ? 1 : 0,
+                                  }}
+                                  transition={spring}
+                                  className="overflow-hidden"
+                                >
+                                  <p className="mt-2 whitespace-pre-line text-xs text-muted-foreground">
+                                    {role.description}
+                                  </p>
+                                </motion.div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
           )}
         </motion.div>
