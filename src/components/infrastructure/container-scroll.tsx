@@ -1,4 +1,4 @@
-// src/components/pipeline/container-scroll.tsx
+// src/components/infrastructure/container-scroll.tsx
 "use client";
 import React from "react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
@@ -7,12 +7,12 @@ const STATUS_PAGE_URL = "https://kuma.haziqhakimi.online/status/self-hosted-apps
 
 export function StatusShowcase() {
   return (
-    <div className="flex flex-col overflow-hidden">
+    <div className="flex flex-col">
       <ContainerScroll
         titleComponent={
           <div className="max-w-5xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-center mb-8">
-              Live Infra Status
+              My Homelab
             </h1>
             <p className="text-muted-foreground">
               Real-time uptime for the apps I self-host

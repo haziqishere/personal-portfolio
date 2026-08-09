@@ -9,7 +9,7 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import Bento from "@/components/bento components/bento";
 
-import { StatusShowcase } from "@/components/pipeline/container-scroll";
+import { StatusShowcase } from "@/components/infrastructure/container-scroll";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { WavyBackgroundSection } from "@/components/cta/wavy-background";
 import { VortexSection } from "@/components/cta/vortext-section";
@@ -62,10 +62,12 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Live Status */}
-      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden bg-gradient-to-b from-white to-slate-50">
+      {/* Infrastructure Showcase */}
+      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen bg-gradient-to-b from-white to-slate-50">
         <StatusShowcase />
       </section>
+
+      {/* Projects Overview */}
       <section id="projects">
         <div className="space-y-12 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>

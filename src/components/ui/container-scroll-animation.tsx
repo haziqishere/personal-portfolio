@@ -1,6 +1,14 @@
 "use client";
 import React, { useRef } from "react";
-import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
+import {
+  useScroll,
+  useSpring,
+  useTransform,
+  motion,
+  MotionValue,
+  useReducedMotion,
+} from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export const ContainerScroll = ({
   titleComponent,
@@ -12,8 +20,18 @@ export const ContainerScroll = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
+    offset: ["start start", "end end"],
+  });
+  // Raw scrollYProgress jumps in discrete steps with wheel/trackpad input,
+  // which reads as stiff/mechanical. Springing it smooths those steps into
+  // fluid motion without changing where the animation starts or ends.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
   });
   const [isMobile, setIsMobile] = React.useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -30,20 +48,38 @@ export const ContainerScroll = ({
     return isMobile ? [0.7, 0.9] : [1.05, 1];
   };
 
-  const rotate = useTransform(scrollYProgress, [0, 1], [20, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions());
-  const translate = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const rotate = useTransform(
+    smoothProgress,
+    [0, 1],
+    shouldReduceMotion ? [0, 0] : [20, 0],
+  );
+  const scale = useTransform(
+    smoothProgress,
+    [0, 1],
+    shouldReduceMotion ? [1, 1] : scaleDimensions(),
+  );
+  const translate = useTransform(
+    smoothProgress,
+    [0, 1],
+    shouldReduceMotion ? [0, 0] : [0, -100],
+  );
 
+  // Tall scroll track: the extra height beyond 100vh is how long the card
+  // stays pinned center-screen while it un-rotates. The sticky child
+  // releases exactly when this track runs out, so "flat" always lands
+  // centered in view. Skipped entirely under reduced motion — the card
+  // just renders flat, in normal flow, no scroll-jacked dead zone.
   return (
     <div
-      className="h-[60rem] md:h-[80rem] flex items-center justify-center relative p-2 md:p-20"
       ref={containerRef}
+      className={cn("relative", !shouldReduceMotion && "h-[150vh]")}
     >
       <div
-        className="py-10 md:py-40 w-full relative"
-        style={{
-          perspective: "1000px",
-        }}
+        className={cn(
+          "flex flex-col items-center justify-center py-10 md:py-20",
+          !shouldReduceMotion && "sticky top-0 h-screen",
+        )}
+        style={shouldReduceMotion ? undefined : { perspective: "1000px" }}
       >
         <Header translate={translate} titleComponent={titleComponent} />
         <Card rotate={rotate} translate={translate} scale={scale}>
