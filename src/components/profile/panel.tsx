@@ -18,6 +18,41 @@ type Mode = "career" | "education";
 
 const SPRING = { type: "spring" as const, bounce: 0, duration: 0.35 };
 
+const MONTHS = [
+  "jan", "feb", "mar", "apr", "may", "jun",
+  "jul", "aug", "sep", "oct", "nov", "dec",
+];
+
+function parseMonthYear(str: string): { year: number; month: number } | null {
+  const match = str.trim().match(/^([A-Za-z]+)\s+(\d{4})$/);
+  if (!match) return null;
+  const month = MONTHS.indexOf(match[1].slice(0, 3).toLowerCase());
+  if (month === -1) return null;
+  return { year: Number(match[2]), month };
+}
+
+function formatDuration(period: string): string {
+  const [startPart, endPart] = period.split(" - ");
+  if (!startPart || !endPart) return "";
+  const start = parseMonthYear(startPart);
+  if (!start) return "";
+  const now = new Date();
+  const end = /current|present/i.test(endPart)
+    ? { year: now.getFullYear(), month: now.getMonth() }
+    : parseMonthYear(endPart);
+  if (!end) return "";
+
+  const months = (end.year - start.year) * 12 + (end.month - start.month) + 1;
+  if (months <= 0) return "";
+
+  const yrs = Math.floor(months / 12);
+  const mos = months % 12;
+  const parts: string[] = [];
+  if (yrs > 0) parts.push(`${yrs}yr${yrs > 1 ? "s" : ""}`);
+  if (mos > 0 || yrs === 0) parts.push(`${mos}mo${mos > 1 ? "s" : ""}`);
+  return parts.join(" ");
+}
+
 function flattenWork() {
   return DATA.work.flatMap((company) =>
     company.roles.map((role) => ({
@@ -27,23 +62,10 @@ function flattenWork() {
       title: role.title,
       period: role.period,
       isCurrent: role.period.toLowerCase().includes("current"),
-      employmentType: role.employmentType,
       skills: role.skills,
       description: role.description,
     })),
   );
-}
-
-function groupByEmploymentType(items: ReturnType<typeof flattenWork>) {
-  const order: string[] = [];
-  const groups = new Map<string, typeof items>();
-  for (const item of items) {
-    if (!groups.has(item.employmentType)) order.push(item.employmentType);
-    const list = groups.get(item.employmentType) ?? [];
-    list.push(item);
-    groups.set(item.employmentType, list);
-  }
-  return order.map((type) => [type, groups.get(type)!] as const);
 }
 
 const socialLinks = Object.entries(DATA.contact.social).filter(
@@ -55,11 +77,11 @@ export function ProfilePanel() {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   const reduceMotion = useReducedMotion();
 
-  const workGroups = groupByEmploymentType(flattenWork());
+  const workItems = flattenWork();
   const spring = reduceMotion ? { duration: 0 } : SPRING;
 
   return (
-    <div className="mx-auto w-full max-w-sm rounded-3xl border bg-card p-5 shadow-sm">
+    <div className="mx-auto flex h-full w-full max-w-sm flex-col rounded-3xl border bg-card p-5 shadow-sm">
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-muted">
         <Image
           src={DATA.avatarUrl}
@@ -154,30 +176,23 @@ export function ProfilePanel() {
                     <AvatarFallback>{edu.school[0]}</AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold">
-                      {edu.school}
-                    </div>
-                    <div className="truncate text-sm text-muted-foreground">
+                    <div className="text-sm font-semibold">{edu.school}</div>
+                    <div className="text-sm text-muted-foreground">
                       {edu.degree}
                     </div>
-                  </div>
-                  <div className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                    {edu.start} - {edu.end}
+                    <div className="mt-0.5 text-xs tabular-nums text-muted-foreground">
+                      {edu.start} - {edu.end}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-        workGroups.map(([employmentType, items]) => (
-              <div key={employmentType}>
-                <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {employmentType}
-                </p>
                 <div className="relative space-y-5">
-                  {items.length > 1 && (
+                  {workItems.length > 1 && (
                     <div className="absolute bottom-5 left-[19px] top-5 w-px bg-border" />
                   )}
-                  {items.map((item) => {
+                  {workItems.map((item) => {
                     const expanded = expandedKey === item.key;
                     return (
                       <div key={item.key} className="relative">
@@ -196,8 +211,8 @@ export function ProfilePanel() {
                             <AvatarFallback>{item.company[0]}</AvatarFallback>
                           </Avatar>
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="truncate text-sm font-semibold">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                              <span className="text-sm font-semibold">
                                 {item.company}
                               </span>
                               {item.isCurrent && (
@@ -209,12 +224,15 @@ export function ProfilePanel() {
                                 </Badge>
                               )}
                             </div>
-                            <div className="truncate text-sm text-muted-foreground">
+                            <div className="text-sm text-muted-foreground">
                               {item.title}
+                            </div>
+                            <div className="mt-0.5 text-xs tabular-nums text-muted-foreground">
+                              {item.period}
                             </div>
                           </div>
                           <div className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                            {item.period}
+                            {formatDuration(item.period)}
                           </div>
                         </button>
 
@@ -256,8 +274,6 @@ export function ProfilePanel() {
                     );
                   })}
                 </div>
-              </div>
-            ))
           )}
         </motion.div>
       </AnimatePresence>

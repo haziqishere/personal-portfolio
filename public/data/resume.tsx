@@ -86,7 +86,7 @@ export const DATA = {
 
   work: [
     {
-      company: "Payment Network Malaysia (PayNet)",
+      company: "PayNet",
       href: "https://paynet.my/index.html",
       location: "On-Site",
       logoUrl: "/company/paynetcircular.png",
@@ -124,7 +124,7 @@ export const DATA = {
       end: "Oct 2024",
       roles: [
         {
-          title: "Full Stack Web Developer Intern",
+          title: "Full Stack Developer Intern",
           period: "Aug 2024 - Oct 2024",
           badges: [],
           employmentType: "Internship",

@@ -24,9 +24,9 @@ export default function Page() {
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       {/* Profile Panel + About + Skills row */}
       <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen">
-        <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16 lg:items-start">
-          <div>
-            <BlurFade delay={BLUR_FADE_DELAY}>
+        <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16 lg:items-stretch">
+          <div className="lg:h-full">
+            <BlurFade delay={BLUR_FADE_DELAY} className="lg:h-full">
               <ProfilePanel />
             </BlurFade>
           </div>
