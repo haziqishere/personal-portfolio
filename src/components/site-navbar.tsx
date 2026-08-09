@@ -27,8 +27,10 @@ export function SiteNavbar() {
   return (
     <div
       className={cn(
-        "sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur transition-colors duration-200",
-        scrolled ? "border-border" : "border-transparent",
+        "sticky top-0 z-40 w-full border-b transition-colors duration-200",
+        scrolled
+          ? "border-border bg-background/95 backdrop-blur"
+          : "border-transparent bg-transparent",
       )}
     >
       <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
