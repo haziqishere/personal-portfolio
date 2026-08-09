@@ -30,12 +30,16 @@ const LOGOS: Array<{
   size: number;
   floatDuration: number;
   floatDelay: number;
+  /** 0-1, how strongly the "lit by the laser beam" glow washes over this
+   * logo. With two logos flanking a `justify-center` gap, the beam runs
+   * through the empty space between them rather than through either logo,
+   * so both sit at roughly the same distance from it. */
+  glow: number;
 }> = [
-  { rotation: [0.7, 0.4, -0.35], scale: 0.5, size: 85, floatDuration: 4.3, floatDelay: -1 },
-  { rotation: [0.9, -0.2, 0.15], scale: 0.45, size: 80, floatDuration: 5, floatDelay: -2.5 },
+  { rotation: [0.7, 0.4, -0.35], scale: 0.5, size: 85, floatDuration: 4.3, floatDelay: -1, glow: 0.5 },
   // Rightmost — confirmed this fills its frame correctly without clipping;
-  // treating it as the max, the other two stay close behind it.
-  { rotation: [0.6, -0.5, 0.4], scale: 0.6, size: 100, floatDuration: 4.7, floatDelay: -0.5 },
+  // treating it as the max, the other stays close behind it.
+  { rotation: [0.6, -0.5, 0.4], scale: 0.6, size: 100, floatDuration: 4.7, floatDelay: -0.5, glow: 0.5 },
 ];
 
 function StaticKubernetesModel({
@@ -102,11 +106,11 @@ export function FloatingKubernetesLogos({
   bottomColor = "#FF9FFC",
 }: FloatingKubernetesLogosProps) {
   return (
-    <div aria-hidden="true" className="flex flex-wrap items-center justify-center gap-6">
+    <div aria-hidden="true" className="flex flex-wrap items-center justify-center gap-24">
       {LOGOS.map((spec, i) => (
         <div
           key={i}
-          className="float-icon"
+          className="float-icon relative"
           style={{
             width: spec.size,
             height: spec.size,
@@ -126,6 +130,13 @@ export function FloatingKubernetesLogos({
             <hemisphereLight args={[topColor, bottomColor, 2]} />
             <directionalLight position={[0, -3, 2]} intensity={3.5} color={bottomColor} />
             <directionalLight position={[0.5, 2, 3]} intensity={1} color={topColor} />
+            {/* Sells "lit by the laser beam" as an actual light hitting the
+                mesh — real specular highlights on the model's own surface
+                normals — instead of a flat CSS overlay sitting on top of
+                the canvas. Color matches LaserFlow's own beam color;
+                intensity scales with spec.glow (how close this logo sits
+                to the beam). */}
+            <pointLight position={[0, 3, 2]} intensity={5 * spec.glow} color="#CF9EFF" distance={10} decay={2} />
             <StaticKubernetesModel rotation={spec.rotation} scale={spec.scale} />
           </Canvas>
         </div>

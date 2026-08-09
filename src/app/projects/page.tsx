@@ -69,8 +69,15 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         />
         </div>
 
-        <BlurFade delay={BLUR_FADE_DELAY}>
-          <div className="relative z-10 mx-auto max-w-2xl space-y-3">
+        {/* z-10 goes on BlurFade itself, not just the div inside it —
+            BlurFade's motion.div keeps a persistent transform/filter even
+            at rest (Framer Motion's "visible" variant isn't `none`), which
+            makes it its own stacking context. Without an explicit z-index
+            on that context-root, it paints as z-index:auto and LaserFlow
+            (later in the DOM) paints over the whole thing regardless of
+            the z-10 buried inside it. */}
+        <BlurFade delay={BLUR_FADE_DELAY} className="z-10">
+          <div className="relative mx-auto max-w-2xl space-y-3">
             <h1 className="text-4xl font-bold tracking-tighter text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.8)] sm:text-5xl">
               I build things & mantain the infra
             </h1>
