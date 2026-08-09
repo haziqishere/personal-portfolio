@@ -26,6 +26,14 @@ export const TECHNOLOGIES = [
   { slug: "aws", name: "AWS", icon: "/icons/aws.svg" },
   { slug: "gcp", name: "GCP", icon: "/icons/gcp.svg" },
   { slug: "argocd", name: "ArgoCD", icon: "/icons/argocd.svg" },
+  { slug: "grafana", name: "Grafana", icon: "/icons/grafana.svg" },
+  { slug: "prometheus", name: "Prometheus", icon: "/icons/prometheus.svg" },
+
+  // Infrastructure
+  { slug: "nvidia-cuda", name: "NVIDIA CUDA", icon: "/icons/cuda.svg" },
+  { slug: "raspberry-pi", name: "Raspberry Pi", icon: "/icons/raspberrypi.svg" },
+  { slug: "helm", name: "Helm", icon: "/icons/helm.svg" },
+
 
   // Tools
   { slug: "git", name: "Git", icon: "/icons/git.svg" },
