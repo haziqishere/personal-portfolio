@@ -7,11 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "../../public/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
-import Bento from "@/components/bento components/bento";
 
 import { StatusShowcase } from "@/components/infrastructure/container-scroll";
-import { WavyBackground } from "@/components/ui/wavy-background";
-import { WavyBackgroundSection } from "@/components/cta/wavy-background";
 import { VortexSection } from "@/components/cta/vortext-section";
 import { SkillsGrid } from "@/components/skills/skills";
 import { ProfilePanel } from "@/components/profile/panel";
