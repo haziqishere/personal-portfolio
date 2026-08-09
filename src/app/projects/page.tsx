@@ -3,8 +3,8 @@ import BlurFade from "@/components/magicui/blur-fade";
 import { ProjectCard } from "@/components/project-card";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "../../../public/data/resume";
-import { getSkillBySlug } from "@/lib/skills";
-import type { SkillSlug } from "../../../public/data/skills";
+import { getTechnologyBySlug } from "@/lib/skills";
+import type { TechnologySlug } from "../../../public/data/skills";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -14,9 +14,9 @@ interface ProjectsPageProps {
 
 export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
   const activeSlugs = (searchParams.skill?.split(",").filter(Boolean) ??
-    []) as SkillSlug[];
+    []) as TechnologySlug[];
   const activeSkills = activeSlugs
-    .map((slug) => getSkillBySlug(slug))
+    .map((slug) => getTechnologyBySlug(slug))
     .filter((skill): skill is NonNullable<typeof skill> => Boolean(skill));
 
   const projects =

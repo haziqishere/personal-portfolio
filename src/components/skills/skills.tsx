@@ -6,17 +6,95 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { getProjectsBySkill } from "@/lib/skills";
-import {
-  SKILLS,
-  SKILL_CATEGORIES,
-  type SkillCategorySlug,
-  type SkillSlug,
-} from "../../../public/data/skills";
+import { getProjectsBySkill, getTechnologyBySlug } from "@/lib/skills";
+import type { TechnologySlug } from "../../../public/data/skills";
 
 const PREVIEW_LIMIT = 3;
 
-function SkillPreviewCard({ slug, name }: { slug: SkillSlug; name: string }) {
+// Which technologies show up on the Skills page, grouped by category.
+// Not every technology in the registry belongs here — some are only
+// referenced from Projects.
+const SKILL_CATEGORIES: Record<
+  string,
+  {
+    title: string;
+    description: string;
+    color: string;
+    technologies: TechnologySlug[];
+  }
+> = {
+  languages: {
+    title: "Languages",
+    description: "Primary programming languages",
+    color: "from-yellow-500/20 to-orange-500/20",
+    technologies: ["python", "java", "sql", "typescript"],
+  },
+  web: {
+    title: "Web Development",
+    description: "Full-stack app tooling",
+    color: "from-blue-500/20 to-cyan-500/20",
+    technologies: ["react", "nextjs", "nodejs", "tailwindcss", "prisma"],
+  },
+  platform: {
+    title: "Platform",
+    description: "Data processing and building ETL",
+    color: "from-red-500/20 to-yellow-500/20",
+    technologies: [
+      "terraform",
+      "kubernetes",
+      "digitalocean",
+      "aws",
+      "gcp",
+      "argocd",
+    ],
+  },
+  tools: {
+    title: "Technology and Tools",
+    description: "Development and deployment tools. Iaas and PaaS",
+    color: "from-purple-500/20 to-red-500/20",
+    technologies: ["git", "gitlab", "docker", "linux", "podman", "insomnia"],
+  },
+  "data-engineering": {
+    title: "Data Engineering",
+    description: "Data processing and building ETL",
+    color: "from-red-500/20 to-yellow-500/20",
+    technologies: [
+      "apache-airflow",
+      "prefect",
+      "snowflake",
+      "apache-kafka",
+      "trino",
+      "apache-iceberg",
+      "apache-spark",
+      "redis",
+      "great-expectations",
+      "dbt",
+      "postgresql",
+    ],
+  },
+  "ds-ml": {
+    title: "DS/ML Engineering",
+    description: "Data analysis and machine learning",
+    color: "from-green-500/20 to-blue-500/20",
+    technologies: [
+      "tensorflow",
+      "pytorch",
+      "weights-and-biases",
+      "kubeflow",
+      "ray",
+      "rapidminer",
+      "tableau",
+    ],
+  },
+};
+
+function SkillPreviewCard({
+  slug,
+  name,
+}: {
+  slug: TechnologySlug;
+  name: string;
+}) {
   const projects = getProjectsBySkill(slug, PREVIEW_LIMIT + 1);
   const preview = projects.slice(0, PREVIEW_LIMIT);
   const hasMore = projects.length > PREVIEW_LIMIT;
@@ -55,15 +133,17 @@ function SkillPreviewCard({ slug, name }: { slug: SkillSlug; name: string }) {
 }
 
 export function SkillsGrid() {
-  const categorySlugs = Object.keys(SKILL_CATEGORIES) as SkillCategorySlug[];
+  const categorySlugs = Object.keys(SKILL_CATEGORIES);
 
   return (
     <div className="w-full py-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categorySlugs.map((categorySlug, idx) => {
           const category = SKILL_CATEGORIES[categorySlug];
-          const skills = SKILLS.filter((skill) => skill.category === categorySlug);
-          if (skills.length === 0) return null;
+          const technologies = category.technologies
+            .map((slug) => getTechnologyBySlug(slug))
+            .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech));
+          if (technologies.length === 0) return null;
 
           return (
             <motion.div
@@ -81,8 +161,8 @@ export function SkillsGrid() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <HoverCard key={skill.slug} openDelay={150} closeDelay={100}>
+                {technologies.map((tech) => (
+                  <HoverCard key={tech.slug} openDelay={150} closeDelay={100}>
                     <HoverCardTrigger asChild>
                       <motion.div
                         whileHover={{ scale: 1.03 }}
@@ -93,17 +173,17 @@ export function SkillsGrid() {
                       >
                         <div className="w-4 h-4 shrink-0">
                           <img
-                            src={skill.icon}
-                            alt={skill.name}
+                            src={tech.icon}
+                            alt={tech.name}
                             className="w-full h-full object-contain"
                           />
                         </div>
                         <span className="text-xs font-medium whitespace-nowrap">
-                          {skill.name}
+                          {tech.name}
                         </span>
                       </motion.div>
                     </HoverCardTrigger>
-                    <SkillPreviewCard slug={skill.slug} name={skill.name} />
+                    <SkillPreviewCard slug={tech.slug} name={tech.name} />
                   </HoverCard>
                 ))}
               </div>

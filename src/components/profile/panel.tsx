@@ -10,7 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { getSkillBySlug } from "@/lib/skills";
+import { getTechnologyBySlug } from "@/lib/skills";
 import { cn } from "@/lib/utils";
 import { DATA } from "../../../public/data/resume";
 
@@ -239,7 +239,7 @@ export function ProfilePanel() {
                         {item.skills.length > 0 && (
                           <div className="mt-2 flex flex-wrap gap-1.5 pl-[52px]">
                             {item.skills.map((slug) => {
-                              const skill = getSkillBySlug(slug);
+                              const skill = getTechnologyBySlug(slug);
                               if (!skill) return null;
                               return (
                                 <Tooltip key={slug}>
