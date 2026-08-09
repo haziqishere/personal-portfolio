@@ -14,7 +14,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 // Same live status embed as the homepage's homelab section — placeholder
 // for the Grafana dashboard until that's ready.
-const STATUS_PAGE_URL = "https://kuma.haziqhakimi.online/status/self-hosted-apps";
+const STATUS_PAGE_URL = "https://grafana.haziqhakimi.online/public-dashboards/708b5f43b367453da7db5607a9f2464a";
 
 // Shared between LightPillar and FloatingKubernetesLogos so the logos
 // always read as lit by the same beam, never drifting out of sync if
@@ -136,13 +136,14 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           falloffStart={1.3}
         />
 
-        <div className="relative z-10 mx-auto mt-8 w-full max-w-6xl">
-          <Safari url="kuma.haziqhakimi.online" className="w-full">
+        <div className="relative z-10 mx-auto mt-8 block w-full max-w-6xl">
+          <Safari url="grafana.haziqhakimi.online" className="w-full">
             <iframe
               src={STATUS_PAGE_URL}
               title="Live homelab status"
               loading="lazy"
-              className="h-full w-full border-0"
+              scrolling="yes"
+              className="h-full w-full overflow-auto border-0"
             />
           </Safari>
         </div>
