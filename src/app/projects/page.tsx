@@ -51,7 +51,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           itself (not a wrapper nested inside one) — -mx-[50vw]/left-[50%]
           math only cancels correctly with a flex-start static position,
           which nesting inside a *different* items-center parent breaks. */}
-      <section className="relative -mx-[50vw] left-[50%] right-[50%] -mt-12 flex w-screen flex-col items-center gap-8 overflow-hidden bg-black px-4 pb-16 pt-16 text-center sm:-mt-24">
+      <section className="relative -mx-[50vw] left-[50%] right-[50%] -mt-12 flex w-screen flex-col items-center gap-2 overflow-hidden bg-black px-4 pb-16 pt-16 text-center sm:-mt-24">
         <div aria-hidden="true" className="absolute inset-0 z-0">
           <LightPillar
             topColor={PILLAR_TOP_COLOR}
@@ -71,12 +71,11 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
 
         <BlurFade delay={BLUR_FADE_DELAY}>
           <div className="relative z-10 mx-auto max-w-2xl space-y-3">
-            <h1 className="text-4xl font-bold tracking-tighter text-white sm:text-5xl">
-              I build things and mantain infra myself
+            <h1 className="text-4xl font-bold tracking-tighter text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.8)] sm:text-5xl">
+              I build things & mantain the infra
             </h1>
-            <p className="text-white/60 md:text-lg">
-              From SaaS products to the homelab powering my own infrastructure
-              — here&apos;s a live look at what&apos;s actually running.
+            <p className="text-white/60 [text-shadow:0_1px_12px_rgba(0,0,0,0.8)] md:text-lg">
+              Replicating industry end-to-end production lifecycle.
             </p>
           </div>
         </BlurFade>
@@ -94,22 +93,29 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         />
 
         {/* Laser beam pours down and lands on Safari — direct child of the
-            section, not nested in an extra wrapper div (nesting it left
-            the canvas dark/invisible — unresolved why). inset-0 fills the
             section (already a 100vw positioned ancestor via its own
             -mx-[50vw] trick). z-0 sits below the white strip (z-[1]) and
             the mockup (z-10), so both occlude the beam where they overlap
             it — the illusion the light lands behind them.
+            Position is set inline, not via the `absolute inset-0`
+            Tailwind classes: LaserFlow.css's own .laser-flow-container
+            rule sets `position: relative`, same specificity as Tailwind's
+            `.absolute` — a coin-flip on stylesheet import order that was
+            actually losing, silently turning this into a real 700px+
+            in-flow block between the logos and Safari (the "gap" that
+            wasn't explained by any margin/gap value). Inline style always
+            wins regardless of specificity, so this is the actual fix.
             verticalBeamOffset: the section is headline + logos + gaps
             (~40% of its height) before Safari even starts, so the impact
             point (local y=0) needs pulling well down from center — raising
             this value moves the impact point *up*, not down. */}
         <LaserFlow
-          className="pointer-events-none absolute inset-0 z-0"
+          className="pointer-events-none z-0"
+          style={{ position: "absolute", inset: 0 }}
           color="#CF9EFF"
           horizontalBeamOffset={0}
-          verticalBeamOffset={0.08}
-          horizontalSizing={2.2}
+          verticalBeamOffset={0.22}
+          horizontalSizing={0.9}
           verticalSizing={1.6}
           wispDensity={0.8}
           wispSpeed={12}
@@ -119,11 +125,11 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           fogIntensity={0.3}
           fogScale={0.12}
           fogFallSpeed={0.24}
-          decay={1.1}
+          decay={1.05}
           falloffStart={1.3}
         />
 
-        <div className="relative z-10 mx-auto mt-12 w-full max-w-6xl">
+        <div className="relative z-10 mx-auto mt-8 w-full max-w-6xl">
           <Safari url="kuma.haziqhakimi.online" className="w-full">
             <iframe
               src={STATUS_PAGE_URL}
