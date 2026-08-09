@@ -9,7 +9,7 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import Bento from "@/components/bento components/bento";
 
-import { ETLPipelineShowcase } from "@/components/pipeline/container-scroll";
+import { StatusShowcase } from "@/components/pipeline/container-scroll";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { WavyBackgroundSection } from "@/components/cta/wavy-background";
 import { VortexSection } from "@/components/cta/vortext-section";
@@ -62,9 +62,9 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ETL Pipeline */}
+      {/* Live Status */}
       <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden bg-gradient-to-b from-white to-slate-50">
-        <ETLPipelineShowcase />
+        <StatusShowcase />
       </section>
       <section id="projects">
         <div className="space-y-12 w-full py-12">
