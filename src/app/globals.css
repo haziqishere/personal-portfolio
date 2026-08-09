@@ -20,6 +20,24 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Orbits an element around its own anchor point on a circle of
+     --orbit-radius while keeping the element itself upright (the trailing
+     counter-rotation cancels the outer rotate's spin on the element). */
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg) translateX(var(--orbit-radius, 20px)) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(var(--orbit-radius, 20px)) rotate(-360deg);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-icon {
+    animation: none !important;
+  }
 }
 
 @layer base {

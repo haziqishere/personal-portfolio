@@ -62,8 +62,8 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Infrastructure Showcase */}
-      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen bg-gradient-to-b from-white to-slate-50">
+      {/* Infrastructure */}
+      <section className="relative -mx-[50vw] left-[50%] right-[50%] w-screen overflow-hidden bg-gradient-to-b from-white to-slate-50">
         <StatusShowcase />
       </section>
 

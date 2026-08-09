@@ -12,10 +12,27 @@ import { cn } from "@/lib/utils";
 
 export const ContainerScroll = ({
   titleComponent,
+  decoration,
   children,
+  // How much extra scroll (beyond 100vh) the card stays pinned for while it
+  // un-rotates — e.g. "150vh" gives a 50vh runway. Tune per-instance based
+  // on how tall your titleComponent + card combo actually is.
+  trackHeight = "150vh",
+  // How far the header drifts upward (px) over the scroll — parallax that
+  // hints the card is about to take its place. Shrink this if your title
+  // has more than one line, so it doesn't drift into the card.
+  headerParallax = 100,
+  // Card's margin-top (px, can be negative). Negative pulls it up under
+  // the header for a tight single-line title; use a small positive value
+  // if your titleComponent has a subtitle line that needs breathing room.
+  cardOffset = -48,
 }: {
   titleComponent: string | React.ReactNode;
+  decoration?: React.ReactNode;
   children: React.ReactNode;
+  trackHeight?: string;
+  headerParallax?: number;
+  cardOffset?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -61,7 +78,7 @@ export const ContainerScroll = ({
   const translate = useTransform(
     smoothProgress,
     [0, 1],
-    shouldReduceMotion ? [0, 0] : [0, -100],
+    shouldReduceMotion ? [0, 0] : [0, -headerParallax],
   );
 
   // Tall scroll track: the extra height beyond 100vh is how long the card
@@ -72,7 +89,8 @@ export const ContainerScroll = ({
   return (
     <div
       ref={containerRef}
-      className={cn("relative", !shouldReduceMotion && "h-[150vh]")}
+      className="relative"
+      style={shouldReduceMotion ? undefined : { height: trackHeight }}
     >
       <div
         className={cn(
@@ -81,8 +99,9 @@ export const ContainerScroll = ({
         )}
         style={shouldReduceMotion ? undefined : { perspective: "1000px" }}
       >
+        {!shouldReduceMotion && decoration}
         <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} translate={translate} scale={scale}>
+        <Card rotate={rotate} translate={translate} scale={scale} offset={cardOffset}>
           {children}
         </Card>
       </div>
@@ -106,11 +125,13 @@ export const Header = ({ translate, titleComponent }: any) => {
 export const Card = ({
   rotate,
   scale,
+  offset,
   children,
 }: {
   rotate: MotionValue<number>;
   scale: MotionValue<number>;
   translate: MotionValue<number>;
+  offset: number;
   children: React.ReactNode;
 }) => {
   return (
@@ -118,10 +139,11 @@ export const Card = ({
       style={{
         rotateX: rotate,
         scale,
+        marginTop: offset,
         boxShadow:
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
-      className="max-w-5xl -mt-12 mx-auto h-[30rem] md:h-[40rem] w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl"
+      className="max-w-5xl mx-auto h-[30rem] md:h-[40rem] w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl"
     >
       <div className=" h-full w-full  overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 md:rounded-2xl md:p-4 ">
         {children}
