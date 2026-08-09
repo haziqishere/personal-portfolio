@@ -40,6 +40,16 @@
   }
 }
 
+/* rough-notation draws each annotation as a position:absolute SVG with no
+   z-index. Per CSS stacking rules, a positioned element with z-index:auto
+   always paints above normal in-flow text in the same stacking context —
+   regardless of DOM order — so the highlight covers neighboring letters
+   instead of sitting behind them. A negative z-index sinks it below the
+   (already position:relative, per the library) annotated text. */
+.rough-annotation {
+  z-index: -1;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
