@@ -27,20 +27,22 @@ type OrbitSpec = {
 // radius. Negative delays start each icon mid-cycle so they never sync.
 const LEFT_ORBIT: OrbitSpec[] = [
   // top-left cluster
-  { slug: "kubernetes", top: "8%", inset: "3%", radius: 60, duration: 25, delay: -8, sizeClass: "size-28" },
-  { slug: "nvidia-cuda", top: "20%", inset: "7%", radius: 40, duration: 22, delay: -4, sizeClass: "size-14" },
+  { slug: "kubernetes", top: "10%", inset: "4%", radius: 60, duration: 26, delay: -10, sizeClass: "size-28" },
+  { slug: "prometheus", top: "24%", inset: "8%", radius: 44, duration: 21, delay: -5, sizeClass: "size-16" },
   // bottom-left cluster
-  { slug: "raspberry-pi", top: "78%", inset: "4%", radius: 50, duration: 28, delay: -12, sizeClass: "size-20" },
-  { slug: "prometheus", top: "90%", inset: "8%", radius: 44, duration: 31, delay: -18, sizeClass: "size-16" },
+  { slug: "nvidia-cuda", top: "76%", inset: "6%", radius: 40, duration: 29, delay: -14, sizeClass: "size-14" },
+  { slug: "raspberry-pi", top: "90%", inset: "3%", radius: 50, duration: 23, delay: -19, sizeClass: "size-20" },
 ];
 
 const RIGHT_ORBIT: OrbitSpec[] = [
-  // top-right cluster
-  { slug: "apache-spark", top: "10%", inset: "4%", radius: 48, duration: 23, delay: -9, sizeClass: "size-20" },
-  { slug: "helm", top: "22%", inset: "8%", radius: 36, duration: 24, delay: -6, sizeClass: "size-12" },
+  // top-right cluster — argocd bumped up to the second-largest, after
+  // kubernetes, so it pops alongside the hero instead of hiding small
+  // in a corner.
+  { slug: "argocd", top: "8%", inset: "3%", radius: 56, duration: 25, delay: -7, sizeClass: "size-24" },
+  { slug: "grafana", top: "22%", inset: "8%", radius: 48, duration: 30, delay: -12, sizeClass: "size-20" },
   // bottom-right cluster
-  { slug: "grafana", top: "76%", inset: "3%", radius: 56, duration: 27, delay: -15, sizeClass: "size-24" },
-  { slug: "argocd", top: "88%", inset: "7%", radius: 42, duration: 20, delay: -3, sizeClass: "size-14" },
+  { slug: "apache-spark", top: "78%", inset: "7%", radius: 42, duration: 22, delay: -16, sizeClass: "size-16" },
+  { slug: "helm", top: "90%", inset: "5%", radius: 36, duration: 27, delay: -4, sizeClass: "size-12" },
 ];
 
 function OrbitIcon({ spec, side }: { spec: OrbitSpec; side: "left" | "right" }) {
