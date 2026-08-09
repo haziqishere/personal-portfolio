@@ -7,6 +7,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { getProjectsBySkill, getTechnologyBySlug } from "@/lib/skills";
+import { ShineBorder } from "@/components/ui/shine-border";
 import type { TechnologySlug } from "../../../public/data/technologies";
 
 const PREVIEW_LIMIT = 3;
@@ -19,26 +20,26 @@ const SKILL_CATEGORIES: Record<
   {
     title: string;
     description: string;
-    color: string;
+    shineColors: string[];
     technologies: TechnologySlug[];
   }
 > = {
   languages: {
     title: "Languages",
     description: "Primary programming languages",
-    color: "from-yellow-500/20 to-orange-500/20",
+    shineColors: ["#eab308", "#f97316"],
     technologies: ["python", "java", "sql", "typescript"],
   },
   web: {
     title: "Web Development",
     description: "Full-stack app tooling",
-    color: "from-blue-500/20 to-cyan-500/20",
+    shineColors: ["#3b82f6", "#06b6d4"],
     technologies: ["react", "nextjs", "nodejs", "tailwindcss", "prisma"],
   },
   platform: {
     title: "Platform",
     description: "Data processing and building ETL",
-    color: "from-red-500/20 to-yellow-500/20",
+    shineColors: ["#ef4444", "#eab308"],
     technologies: [
       "terraform",
       "kubernetes",
@@ -51,13 +52,13 @@ const SKILL_CATEGORIES: Record<
   tools: {
     title: "Technology and Tools",
     description: "Development and deployment tools. Iaas and PaaS",
-    color: "from-purple-500/20 to-red-500/20",
+    shineColors: ["#a855f7", "#ef4444"],
     technologies: ["git", "gitlab", "docker", "linux", "podman", "insomnia"],
   },
   "data-engineering": {
     title: "Data Engineering",
     description: "Data processing and building ETL",
-    color: "from-red-500/20 to-yellow-500/20",
+    shineColors: ["#ef4444", "#eab308"],
     technologies: [
       "apache-airflow",
       "prefect",
@@ -75,7 +76,7 @@ const SKILL_CATEGORIES: Record<
   "ds-ml": {
     title: "DS/ML Engineering",
     description: "Data analysis and machine learning",
-    color: "from-green-500/20 to-blue-500/20",
+    shineColors: ["#22c55e", "#3b82f6"],
     technologies: [
       "tensorflow",
       "pytorch",
@@ -188,10 +189,11 @@ export function SkillsGrid() {
                 ))}
               </div>
 
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${category.color}
-                           opacity-0 group-hover:opacity-100 transition-opacity
-                           duration-500 -z-10 rounded-xl`}
+              <ShineBorder
+                shineColor={category.shineColors}
+                borderWidth={2}
+                duration={8}
+                className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
             </motion.div>
           );

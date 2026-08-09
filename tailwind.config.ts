@@ -66,7 +66,8 @@ const config: Config = {
   		animation: {
   			gradient: 'gradient 8s linear infinite',
   			marquee: 'marquee var(--duration) infinite linear',
-  			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite'
+  			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
+  			shine: 'shine var(--duration) infinite linear'
   		},
   		keyframes: {
   			gradient: {
@@ -88,6 +89,17 @@ const config: Config = {
   				},
   				to: {
   					transform: 'translateY(calc(-100% - var(--gap)))'
+  				}
+  			},
+  			shine: {
+  				'0%': {
+  					backgroundPosition: '0% 0%'
+  				},
+  				'50%': {
+  					backgroundPosition: '100% 100%'
+  				},
+  				to: {
+  					backgroundPosition: '0% 0%'
   				}
   			}
   		}
