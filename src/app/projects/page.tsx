@@ -59,13 +59,13 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
             intensity={0.8}
             rotationSpeed={0.3}
             glowAmount={0.002}
-            pillarWidth={1}
+            pillarWidth={1.5}
             pillarHeight={0.4}
             noiseIntensity={0.5}
             pillarRotation={0}
             interactive={false}
             mixBlendMode="screen"
-            quality="high"
+            quality="medium"
         />
         </div>
 
@@ -79,7 +79,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         <BlurFade delay={BLUR_FADE_DELAY} className="z-10">
           <div className="relative mx-auto max-w-2xl space-y-3">
             <h1 className="text-4xl font-bold tracking-tighter text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.8)] sm:text-5xl">
-              I build things & mantain the infra
+              I build things & maintain the infra
             </h1>
             <p className="text-white/60 [text-shadow:0_1px_12px_rgba(0,0,0,0.8)] md:text-lg">
               Replicating industry end-to-end production lifecycle.
@@ -116,7 +116,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
             (~40% of its height) before Safari even starts, so the impact
             point (local y=0) needs pulling well down from center — raising
             this value moves the impact point *up*, not down. */}
-        <LaserFlow
+        {/* <LaserFlow
           className="pointer-events-none z-0"
           style={{ position: "absolute", inset: 0 }}
           color="#CF9EFF"
@@ -134,7 +134,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           fogFallSpeed={0.24}
           decay={1.05}
           falloffStart={1.3}
-        />
+        /> */}
 
         <div className="relative z-10 mx-auto mt-8 block w-full max-w-6xl">
           <Safari url="grafana.haziqhakimi.online" className="w-full">
