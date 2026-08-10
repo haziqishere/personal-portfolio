@@ -7,16 +7,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { getTechnologyBySlug } from "@/lib/skills";
 import Image from "next/image";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import type { TechnologySlug } from "../../public/data/technologies";
 
 interface Props {
   title: string;
   href?: string;
   description: string;
   dates: string;
-  tags: readonly string[];
+  skills?: readonly TechnologySlug[];
   link?: string;
   image?: string;
   video?: string;
@@ -33,13 +35,16 @@ export function ProjectCard({
   href,
   description,
   dates,
-  tags,
+  skills,
   link,
   image,
   video,
   links,
   className,
 }: Props) {
+  const technologies = (skills ?? [])
+    .map((slug) => getTechnologyBySlug(slug))
+    .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech));
   return (
     <Card
       className={
@@ -83,16 +88,26 @@ export function ProjectCard({
         </div>
       </CardHeader>
       <CardContent className="mt-auto flex flex-col px-2">
-        {tags && tags.length > 0 && (
+        {technologies.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
-            {tags?.map((tag) => (
-              <Badge
-                className="px-1 py-0 text-[10px]"
-                variant="secondary"
-                key={tag}
+            {technologies.map((tech) => (
+              <div
+                key={tech.slug}
+                className="flex items-center gap-1 rounded-full border px-2 py-0.5"
               >
-                {tag}
-              </Badge>
+                <div className="h-3 w-3 shrink-0">
+                  <Image
+                    src={tech.icon}
+                    alt={tech.name}
+                    width={12}
+                    height={12}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <span className="text-[10px] font-medium whitespace-nowrap">
+                  {tech.name}
+                </span>
+              </div>
             ))}
           </div>
         )}

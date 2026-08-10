@@ -11,8 +11,8 @@ const projectSkills = {
   webApp: [
     "nextjs",
     "typescript",
-    "postgresql",
     "prisma",
+    "postgresql",
     "tailwindcss",
   ] as TechnologySlug[],
 };
@@ -171,16 +171,6 @@ export const DATA = {
       is_selected_work: true,
       description:
         "With the release of the [OpenAI GPT Store](https://openai.com/blog/introducing-the-gpt-store), I decided to build a SaaS which allows users to collect email addresses from their GPT users. This is a great way to build an audience and monetize your GPT API usage.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Magic UI",
-      ],
       skills: projectSkills.webApp,
       links: [
         {
@@ -201,16 +191,6 @@ export const DATA = {
       is_selected_work: true,
       description:
         "Designed, developed and sold animated UI components for developers.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Magic UI",
-      ],
       skills: projectSkills.webApp,
       links: [
         {
@@ -235,17 +215,6 @@ export const DATA = {
       is_selected_work: true,
       description:
         "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
-      ],
       skills: projectSkills.webApp,
       links: [
         {
@@ -270,17 +239,6 @@ export const DATA = {
       is_selected_work: true,
       description:
         "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
-      ],
       skills: projectSkills.webApp,
       links: [
         {
