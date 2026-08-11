@@ -213,9 +213,6 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         <section className="space-y-8 pt-16 pb-16">
           <BlurFade delay={BLUR_FADE_DELAY * 6}>
             <div className="space-y-3 border-b border-foreground/10 pb-6">
-              <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
-                {restWork.length} other build{restWork.length === 1 ? "" : "s"}
-              </div>
               <h2 className="text-xl font-bold tracking-tighter sm:text-2xl">
                 Everything else
               </h2>
