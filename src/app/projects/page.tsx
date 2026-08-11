@@ -1,14 +1,14 @@
 import Link from "next/link";
 import BlurFade from "@/components/magicui/blur-fade";
-import { ProjectCard } from "@/components/project-card";
+import { ProjectGrid } from "@/components/project-grid";
 import { Badge } from "@/components/ui/badge";
 import { Safari } from "@/components/ui/safari";
 import { DATA } from "../../../public/data/resume";
 import { getTechnologyBySlug } from "@/lib/skills";
 import type { TechnologySlug } from "../../../public/data/technologies";
-import LightPillar from "@/components/LightPillar";
+import LightPillar from "@/components/ui/LightPillar";
 import { FloatingKubernetesLogos } from "@/components/floating-kubernetes";
-import LaserFlow from "@/components/LaserFlow";
+import LaserFlow from "@/components/ui/LaserFlow";
 import { RepoFilterGrid } from "@/components/repo-filter-grid";
 
 const BLUR_FADE_DELAY = 0.04;
@@ -180,33 +180,18 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           </BlurFade>
         )}
 
-        {projects.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {projects.map((project, id) => (
-              <BlurFade
-                key={project.title}
-                delay={BLUR_FADE_DELAY * 5 + id * 0.05}
-              >
-                <ProjectCard
-                  href={project.href}
-                  title={project.title}
-                  description={project.description}
-                  dates={project.dates}
-                  skills={project.skills}
-                  image={project.image}
-                  video={project.video}
-                  links={project.links}
-                />
-              </BlurFade>
-            ))}
-          </div>
-        ) : (
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <p className="text-muted-foreground">
-              No projects match this filter yet.
-            </p>
-          </BlurFade>
-        )}
+        <ProjectGrid
+          projects={projects}
+          delayOffset={BLUR_FADE_DELAY * 5}
+          className="gap-4"
+          emptyState={
+            <BlurFade delay={BLUR_FADE_DELAY * 5}>
+              <p className="text-muted-foreground">
+                No projects match this filter yet.
+              </p>
+            </BlurFade>
+          }
+        />
       </section>
 
       {restWork.length > 0 && (
