@@ -7,6 +7,7 @@ import type { TechnologySlug } from "../../public/data/technologies";
 interface Project {
   title: string;
   href?: string;
+  slug?: string;
   description: string;
   dates: string;
   skills?: readonly TechnologySlug[];
@@ -40,6 +41,7 @@ export function ProjectGrid({
         <BlurFade key={project.title} delay={delayOffset + id * delayStep}>
           <ProjectCard
             href={project.href}
+            slug={project.slug}
             title={project.title}
             description={project.description}
             dates={project.dates}

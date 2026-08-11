@@ -20,6 +20,7 @@ import type { TechnologySlug } from "../../public/data/technologies";
 interface RepoProject {
   title: string;
   href?: string;
+  slug?: string;
   description: string;
   dates: string;
   skills: readonly TechnologySlug[];
@@ -122,6 +123,7 @@ export function RepoFilterGrid({ projects }: RepoFilterGridProps) {
             <BlurFade key={project.title} delay={id * 0.05}>
               <ProjectCard
                 href={project.href}
+                slug={project.slug}
                 title={project.title}
                 description={project.description}
                 dates={project.dates}

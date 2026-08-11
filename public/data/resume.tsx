@@ -166,6 +166,7 @@ export const DATA = {
     {
       title: "Chat Collect",
       href: "https://chatcollect.com",
+      slug: "chat-collect",
       dates: "Jan 2024 - Feb 2024",
       active: true,
       is_selected_work: true,
@@ -186,6 +187,7 @@ export const DATA = {
     {
       title: "Magic UI",
       href: "https://magicui.design",
+      slug: "",
       dates: "June 2023 - Present",
       active: true,
       is_selected_work: true,
@@ -210,6 +212,7 @@ export const DATA = {
     {
       title: "llm.report",
       href: "https://llm.report",
+      slug: "",
       dates: "April 2023 - September 2023",
       active: true,
       is_selected_work: true,
@@ -234,6 +237,7 @@ export const DATA = {
     {
       title: "Automatic Chat",
       href: "https://automatic.chat",
+      slug: "",
       dates: "April 2023 - March 2024",
       active: true,
       is_selected_work: true,
@@ -255,6 +259,7 @@ export const DATA = {
     {
       title: "Dummy Repo",
       href: "https://github.com/haziqishere",
+      slug: "",
       dates: "Jan 2025",
       active: false,
       is_selected_work: false,
@@ -274,6 +279,7 @@ export const DATA = {
     {
       title: "Dummy Pipeline",
       href: "https://github.com/haziqishere",
+      slug: "",
       dates: "Mar 2025",
       active: false,
       is_selected_work: false,
@@ -293,6 +299,7 @@ export const DATA = {
     {
       title: "Dummy Cluster",
       href: "https://github.com/haziqishere",
+      slug: "",
       dates: "May 2025",
       active: false,
       is_selected_work: false,

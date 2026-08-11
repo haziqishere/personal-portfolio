@@ -16,6 +16,7 @@ import type { TechnologySlug } from "../../public/data/technologies";
 interface Props {
   title: string;
   href?: string;
+  slug?: string;
   description: string;
   dates: string;
   skills?: readonly TechnologySlug[];
@@ -33,6 +34,7 @@ interface Props {
 export function ProjectCard({
   title,
   href,
+  slug,
   description,
   dates,
   skills,
@@ -43,8 +45,9 @@ export function ProjectCard({
   className,
 }: Props) {
   const technologies = (skills ?? [])
-    .map((slug) => getTechnologyBySlug(slug))
+    .map((techSlug) => getTechnologyBySlug(techSlug))
     .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech));
+  const detailHref = slug ? `/projects/${slug}` : href;
   return (
     <Card
       className={
@@ -52,7 +55,7 @@ export function ProjectCard({
       }
     >
       <Link
-        href={href || "#"}
+        href={detailHref || "#"}
         className={cn("block cursor-pointer", className)}
       >
         {video && (
