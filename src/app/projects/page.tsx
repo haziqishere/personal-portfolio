@@ -9,6 +9,7 @@ import type { TechnologySlug } from "../../../public/data/technologies";
 import LightPillar from "@/components/LightPillar";
 import { FloatingKubernetesLogos } from "@/components/floating-kubernetes";
 import LaserFlow from "@/components/LaserFlow";
+import { RepoFilterGrid } from "@/components/repo-filter-grid";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -41,7 +42,6 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
     activeSlugs.every((slug) => project.skills.includes(slug));
 
   const projects = selectedWork.filter(matchesActiveSkills);
-  const repositories = restWork.filter(matchesActiveSkills);
 
   return (
     <main className="flex flex-col min-h-[100dvh] max-w-5xl mx-auto px-4">
@@ -209,12 +209,12 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         )}
       </section>
 
-      {repositories.length > 0 && (
+      {restWork.length > 0 && (
         <section className="space-y-8 pt-16 pb-16">
           <BlurFade delay={BLUR_FADE_DELAY * 6}>
             <div className="space-y-3 border-b border-foreground/10 pb-6">
               <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
-                {repositories.length} other build{repositories.length === 1 ? "" : "s"}
+                {restWork.length} other build{restWork.length === 1 ? "" : "s"}
               </div>
               <h2 className="text-xl font-bold tracking-tighter sm:text-2xl">
                 Everything else
@@ -222,24 +222,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
             </div>
           </BlurFade>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {repositories.map((project, id) => (
-              <BlurFade
-                key={project.title}
-                delay={BLUR_FADE_DELAY * 7 + id * 0.05}
-              >
-                <ProjectCard
-                  href={project.href}
-                  title={project.title}
-                  description={project.description}
-                  dates={project.dates}
-                  skills={project.skills}
-                  image={project.image}
-                  links={project.links}
-                />
-              </BlurFade>
-            ))}
-          </div>
+          <RepoFilterGrid projects={restWork} />
         </section>
       )}
     </main>
