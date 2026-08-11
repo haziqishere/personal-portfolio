@@ -34,12 +34,14 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
     .filter((skill): skill is NonNullable<typeof skill> => Boolean(skill));
 
   const selectedWork = DATA.projects.filter((project) => project.is_selected_work);
-  const projects =
-    activeSlugs.length === 0
-      ? selectedWork
-      : selectedWork.filter((project) =>
-          activeSlugs.every((slug) => project.skills.includes(slug)),
-        );
+  const restWork = DATA.projects.filter((project) => !project.is_selected_work);
+
+  const matchesActiveSkills = (project: (typeof DATA.projects)[number]) =>
+    activeSlugs.length === 0 ||
+    activeSlugs.every((slug) => project.skills.includes(slug));
+
+  const projects = selectedWork.filter(matchesActiveSkills);
+  const repositories = restWork.filter(matchesActiveSkills);
 
   return (
     <main className="flex flex-col min-h-[100dvh] max-w-5xl mx-auto px-4">
@@ -152,11 +154,8 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
       {/* Selected work */}
       <section className="space-y-8 pb-16">
         <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <div className="space-y-2">
-            <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
-              Selected work
-            </div>
-            <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">
+          <div className="space-y-3 border-b border-foreground/10 pb-6 pt-3">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
               {activeSkills.length > 0 ? "Filtered projects" : "Projects I'm proud of"}
             </h2>
           </div>
@@ -182,7 +181,7 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
         )}
 
         {projects.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {projects.map((project, id) => (
               <BlurFade
                 key={project.title}
@@ -209,6 +208,40 @@ export default function ProjectsPage({ searchParams }: ProjectsPageProps) {
           </BlurFade>
         )}
       </section>
+
+      {repositories.length > 0 && (
+        <section className="space-y-8 pt-16 pb-16">
+          <BlurFade delay={BLUR_FADE_DELAY * 6}>
+            <div className="space-y-3 border-b border-foreground/10 pb-6">
+              <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
+                {repositories.length} other build{repositories.length === 1 ? "" : "s"}
+              </div>
+              <h2 className="text-xl font-bold tracking-tighter sm:text-2xl">
+                Everything else
+              </h2>
+            </div>
+          </BlurFade>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {repositories.map((project, id) => (
+              <BlurFade
+                key={project.title}
+                delay={BLUR_FADE_DELAY * 7 + id * 0.05}
+              >
+                <ProjectCard
+                  href={project.href}
+                  title={project.title}
+                  description={project.description}
+                  dates={project.dates}
+                  skills={project.skills}
+                  image={project.image}
+                  links={project.links}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

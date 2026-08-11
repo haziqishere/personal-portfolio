@@ -251,6 +251,25 @@ export const DATA = {
       video:
         "https://pub-83c5db439b40468498f97946200806f7.r2.dev/automatic-chat.mp4",
     },
+    // DUMMY — remove once real unfeatured project exists.
+    {
+      title: "Dummy Repo",
+      href: "https://github.com/haziqishere",
+      dates: "Jan 2025",
+      active: false,
+      is_selected_work: false,
+      description: "Placeholder entry to preview the unfeatured project card layout.",
+      skills: projectSkills.webApp,
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/haziqishere",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/hackathon/payhack.png",
+      video: "",
+    },
   ],
   hackathons: [
     {
