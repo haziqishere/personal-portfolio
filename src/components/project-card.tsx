@@ -50,14 +50,19 @@ export function ProjectCard({
   const detailHref = slug ? `/projects/${slug}` : href;
   return (
     <Card
-      className={
-        "flex flex-col overflow-hidden border hover:shadow-lg transition-all duration-300 ease-out h-full"
-      }
+      className={cn(
+        "relative flex flex-col overflow-hidden border hover:shadow-lg transition-all duration-300 ease-out h-full",
+        className,
+      )}
     >
-      <Link
-        href={detailHref || "#"}
-        className={cn("block cursor-pointer", className)}
-      >
+      {/* Full-card click target. Sits above the passive content (which is
+          pointer-events-none, so clicks fall through to this) but below the
+          footer's real external links, which raise themselves back on top. */}
+      <Link href={detailHref || "#"} className="absolute inset-0 z-10">
+        <span className="sr-only">{title}</span>
+      </Link>
+
+      <div className="pointer-events-none flex flex-1 flex-col">
         {video && (
           <video
             src={video}
@@ -65,7 +70,7 @@ export function ProjectCard({
             loop
             muted
             playsInline
-            className="pointer-events-none mx-auto h-40 w-full object-cover object-top" // needed because random black line at bottom of video
+            className="mx-auto h-40 w-full object-cover object-top" // needed because random black line at bottom of video
           />
         )}
         {image && (
@@ -77,45 +82,45 @@ export function ProjectCard({
             className="h-40 w-full overflow-hidden object-cover object-top"
           />
         )}
-      </Link>
-      <CardHeader className="px-2">
-        <div className="space-y-1">
-          <CardTitle className="mt-1 text-base">{title}</CardTitle>
-          <time className="font-sans text-xs">{dates}</time>
-          <div className="hidden font-sans text-xs underline print:visible">
-            {link?.replace("https://", "").replace("www.", "").replace("/", "")}
+        <CardHeader className="px-2">
+          <div className="space-y-1">
+            <CardTitle className="mt-1 text-base">{title}</CardTitle>
+            <time className="font-sans text-xs">{dates}</time>
+            <div className="hidden font-sans text-xs underline print:visible">
+              {link?.replace("https://", "").replace("www.", "").replace("/", "")}
+            </div>
+            <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert">
+              {description}
+            </Markdown>
           </div>
-          <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert">
-            {description}
-          </Markdown>
-        </div>
-      </CardHeader>
-      <CardContent className="mt-auto flex flex-col px-2">
-        {technologies.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {technologies.map((tech) => (
-              <div
-                key={tech.slug}
-                className="flex items-center gap-1 rounded-full border px-2 py-0.5"
-              >
-                <div className="h-3 w-3 shrink-0">
-                  <Image
-                    src={tech.icon}
-                    alt={tech.name}
-                    width={12}
-                    height={12}
-                    className="h-full w-full object-contain"
-                  />
+        </CardHeader>
+        <CardContent className="mt-auto flex flex-col px-2">
+          {technologies.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {technologies.map((tech) => (
+                <div
+                  key={tech.slug}
+                  className="flex items-center gap-1 rounded-full border px-2 py-0.5"
+                >
+                  <div className="h-3 w-3 shrink-0">
+                    <Image
+                      src={tech.icon}
+                      alt={tech.name}
+                      width={12}
+                      height={12}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <span className="text-[10px] font-medium whitespace-nowrap">
+                    {tech.name}
+                  </span>
                 </div>
-                <span className="text-[10px] font-medium whitespace-nowrap">
-                  {tech.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-      <CardFooter className="px-2 pb-2">
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </div>
+      <CardFooter className="relative z-20 px-2 pb-2">
         {links && links.length > 0 && (
           <div className="flex flex-row flex-wrap items-start gap-1">
             {links?.map((link, idx) => (
