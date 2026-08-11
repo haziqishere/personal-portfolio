@@ -9,6 +9,7 @@ import {
   MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
+  MenubarLabel,
   MenubarMenu,
   MenubarSeparator,
   MenubarTrigger,
@@ -35,7 +36,17 @@ export function RepoFilterGrid({ projects }: RepoFilterGridProps) {
 
   const techOptions = Array.from(new Set(projects.flatMap((p) => p.skills)))
     .map((slug) => getTechnologyBySlug(slug))
-    .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech));
+    .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const techGroups = techOptions.reduce<Record<string, typeof techOptions>>(
+    (groups, tech) => {
+      const letter = tech.name[0]!.toUpperCase();
+      (groups[letter] ??= []).push(tech);
+      return groups;
+    },
+    {},
+  );
 
   const filtered =
     selected.size === 0
@@ -61,28 +72,37 @@ export function RepoFilterGrid({ projects }: RepoFilterGridProps) {
             <MenubarTrigger className="rounded-full border px-3 py-1.5 text-sm">
               Filter by tech{selected.size > 0 ? ` (${selected.size})` : ""}
             </MenubarTrigger>
-            <MenubarContent className="w-56">
-              {techOptions.map((tech) => (
-                <MenubarCheckboxItem
-                  key={tech.slug}
-                  checked={selected.has(tech.slug)}
-                  onCheckedChange={() => toggle(tech.slug)}
-                  onSelect={(e) => e.preventDefault()}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="h-3.5 w-3.5 shrink-0">
-                      <Image
-                        src={tech.icon}
-                        alt=""
-                        width={14}
-                        height={14}
-                        className="h-full w-full object-contain"
-                      />
-                    </span>
-                    {tech.name}
-                  </span>
-                </MenubarCheckboxItem>
-              ))}
+            <MenubarContent className="w-[28rem] max-w-[90vw]">
+              <div className="columns-2 gap-4">
+                {Object.entries(techGroups).map(([letter, techs]) => (
+                  <div key={letter} className="break-inside-avoid">
+                    <MenubarLabel className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                      {letter}
+                    </MenubarLabel>
+                    {techs.map((tech) => (
+                      <MenubarCheckboxItem
+                        key={tech.slug}
+                        checked={selected.has(tech.slug)}
+                        onCheckedChange={() => toggle(tech.slug)}
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="h-3.5 w-3.5 shrink-0">
+                            <Image
+                              src={tech.icon}
+                              alt=""
+                              width={14}
+                              height={14}
+                              className="h-full w-full object-contain"
+                            />
+                          </span>
+                          {tech.name}
+                        </span>
+                      </MenubarCheckboxItem>
+                    ))}
+                  </div>
+                ))}
+              </div>
               {selected.size > 0 && (
                 <>
                   <MenubarSeparator />

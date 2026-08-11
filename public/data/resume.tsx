@@ -270,6 +270,44 @@ export const DATA = {
       image: "/hackathon/payhack.png",
       video: "",
     },
+    // DUMMY — remove once real unfeatured project exists.
+    {
+      title: "Dummy Pipeline",
+      href: "https://github.com/haziqishere",
+      dates: "Mar 2025",
+      active: false,
+      is_selected_work: false,
+      description: "Placeholder entry with a data/ML stack, to test the tech filter.",
+      skills: ["python", "apache-airflow", "apache-spark", "postgresql"] as TechnologySlug[],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/haziqishere",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/hackathon/jomhack_datathon.jpg",
+      video: "",
+    },
+    // DUMMY — remove once real unfeatured project exists.
+    {
+      title: "Dummy Cluster",
+      href: "https://github.com/haziqishere",
+      dates: "May 2025",
+      active: false,
+      is_selected_work: false,
+      description: "Placeholder entry with an infra/devops stack, to test the tech filter.",
+      skills: ["docker", "kubernetes", "terraform", "grafana"] as TechnologySlug[],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/haziqishere",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/hackathon/airselangor.jpg",
+      video: "",
+    },
   ],
   hackathons: [
     {

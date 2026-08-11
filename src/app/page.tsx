@@ -4,6 +4,7 @@ import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/project-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { DATA } from "../../public/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -16,6 +17,10 @@ import { ProfilePanel } from "@/components/profile/panel";
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
+  const featuredProjects = DATA.projects
+    .filter((project) => project.is_selected_work)
+    .slice(0, 4);
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       {/* Profile Panel + About + Skills row */}
@@ -85,7 +90,7 @@ export default function Page() {
             </div>
           </BlurFade>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto">
-            {DATA.projects.map((project, id) => (
+            {featuredProjects.map((project, id) => (
               <BlurFade
                 key={project.title}
                 delay={BLUR_FADE_DELAY * 12 + id * 0.05}
@@ -104,6 +109,13 @@ export default function Page() {
               </BlurFade>
             ))}
           </div>
+          <BlurFade delay={BLUR_FADE_DELAY * 12 + featuredProjects.length * 0.05}>
+            <div className="flex justify-center">
+              <Button asChild variant="outline">
+                <Link href="/projects">View more projects</Link>
+              </Button>
+            </div>
+          </BlurFade>
         </div>
       </section>
 
