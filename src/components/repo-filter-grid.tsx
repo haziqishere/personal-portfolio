@@ -22,7 +22,7 @@ interface RepoProject {
   href?: string;
   slug?: string;
   description: string;
-  dates: string;
+  dates?: string;
   skills: readonly TechnologySlug[];
   image?: string;
   links?: readonly { icon: ReactNode; type: string; href: string }[];
