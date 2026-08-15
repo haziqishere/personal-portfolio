@@ -15,8 +15,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 // Same live status embed as the homepage's homelab section — placeholder
 // for the Grafana dashboard until that's ready.
-const STATUS_PAGE_URL = "https://grafana.haziqhakimi.online/public-dashboards/708b5f43b367453da7db5607a9f2464a";
-
+const STATUS_PAGE_URL = "https://grafana.haziqhakimi.online/public-dashboards/8246c92acaa847fe83fe45bab7f8ea2b";
 // Shared between LightPillar and FloatingKubernetesLogos so the logos
 // always read as lit by the same beam, never drifting out of sync if
 // either gets retuned later.
