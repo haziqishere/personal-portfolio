@@ -9,7 +9,6 @@ interface Project {
   href?: string;
   slug?: string;
   description: string;
-  dates: string;
   skills?: readonly TechnologySlug[];
   image?: string;
   video?: string;
@@ -44,7 +43,6 @@ export function ProjectGrid({
             slug={project.slug}
             title={project.title}
             description={project.description}
-            dates={project.dates}
             skills={project.skills}
             image={project.image}
             video={project.video}
