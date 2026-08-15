@@ -1,0 +1,137 @@
+---
+title: "Self-Managed Kubernetes & Data Platform"
+date: "2024-01-01"
+summary: "A bare-metal homelab run like a real platform team would run it: GitOps control plane, a data platform for batch/distributed workloads, and a networking layer that never exposes a port to the internet."
+---
+
+## Overview
+
+This is a self-managed Kubernetes cluster running at home, treated less like a
+"homelab" and more like a small production platform. The goal wasn't to run
+one app — it was to build the platform layer underneath many: a GitOps
+control plane, a data platform for orchestration and distributed compute, and
+an observability stack that actually tells me when something's wrong before I
+notice it myself.
+
+TODO — node count, hardware, and OS layer (bare-metal vs VMs).
+
+## Platform architecture: everything through Git
+
+Every workload on the cluster is managed by **ArgoCD**. Nothing gets applied
+by hand with `kubectl apply` — the cluster's desired state lives entirely in
+Git, and ArgoCD continuously reconciles the live state against it.
+
+That buys the same properties a platform team cares about in production:
+
+- **Drift detection.** If something changes out-of-band (a manual `kubectl
+  edit`, a manifest someone forgot to commit), ArgoCD flags it as `OutOfSync`
+  instead of silently drifting.
+- **Auditability.** Every change to the cluster has a commit, an author, and
+  a diff — the Git history *is* the change log.
+- **Fast, boring recovery.** Recovering a workload after a node failure or a
+  bad deploy isn't a debugging exercise, it's a sync.
+
+TODO — app-of-apps structure / repo layout, how new workloads get onboarded.
+
+## Data platform: Prefect + the Spark Kubernetes Operator
+
+Running on top of that platform is a small data platform, made of two
+pieces that intentionally do different jobs:
+
+- **Prefect** handles orchestration — scheduling, retries, dependencies
+  between tasks. It's the layer that decides *when* and *in what order*
+  things run.
+- **Spark Kubernetes Operator** handles the actual distributed compute.
+  Instead of a static, always-on Spark cluster, driver and executor pods are
+  scheduled as native Kubernetes workloads and torn down when the job
+  finishes — the platform's scheduler does the resource management instead
+  of a separate YARN-style layer.
+
+Splitting orchestration from compute this way means either piece can be
+swapped independently — the data platform isn't married to Spark, and
+Prefect isn't married to any single compute engine.
+
+TODO — what the pipelines actually process; a concrete example DAG.
+
+## Observability: Prometheus + Grafana
+
+The platform ships its own telemetry rather than treating monitoring as an
+afterthought. Prometheus scrapes metrics from the cluster and workloads;
+Grafana is the single pane of glass on top of it — the same dashboards
+embedded live on the [homepage](/) and the [projects hero](/projects) are
+this stack, not a mockup.
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="why-not-hosted">
+    <AccordionTrigger>
+      Why self-host observability instead of a hosted SaaS?
+    </AccordionTrigger>
+    <AccordionContent>
+      Partly cost, mostly the point of the project — running Prometheus and
+      Grafana yourself means owning retention, scrape configs, and alerting
+      rules end to end, which is the actual skill being practiced here.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+TODO — what's actually alerted on, and where alerts go.
+
+## Networking: DNS → tunnel → NodePort, no exposed ports
+
+The networking design's one hard constraint: nothing on the home network
+accepts inbound connections directly. The path a request takes:
+
+```
+client → Cloudflare DNS → Cloudflare Tunnel → NodePort (in-cluster)
+```
+
+A request first resolves through Cloudflare's DNS. Cloudflare then proxies
+it over a **Cloudflare Tunnel** — an outbound-only connection initiated
+*from inside* the cluster to Cloudflare's edge — which terminates on a
+Kubernetes `NodePort` service. There's no port-forwarding on the router and
+no public IP pointed at the home network; the only thing exposed to the
+internet is Cloudflare's own edge.
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="why-tunnel">
+    <AccordionTrigger>
+      Why a tunnel instead of a reverse proxy on a public IP?
+    </AccordionTrigger>
+    <AccordionContent>
+      An outbound-only tunnel means the home network's attack surface from
+      the internet is effectively zero — there's no listening port to scan
+      or exploit in the first place, versus a reverse proxy that has to be
+      hardened, patched, and monitored as its own edge service.
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="why-nodeport">
+    <AccordionTrigger>
+      Why land on a NodePort instead of a LoadBalancer or Ingress?
+    </AccordionTrigger>
+    <AccordionContent>
+      Bare-metal Kubernetes has no cloud LoadBalancer to hand a service a
+      real external IP, and the tunnel already does the edge routing that an
+      Ingress controller would otherwise be responsible for — so NodePort is
+      the minimal integration point between the two.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+TODO — drop a real architecture diagram here once one exists, e.g.
+`<MediaViewer src="/projects/homelab-network-diagram.png" type="image" alt="..." />`.
+
+## SRE practices this platform is built around
+
+- **Everything reproducible from Git** — a fresh node or a rebuilt cluster
+  converges back to the same state without manual steps.
+- **Declarative over imperative** — the desired state is the source of
+  truth; ArgoCD's job is just closing the gap between desired and actual.
+- **Zero inbound attack surface by construction** — the tunnel model means
+  network security isn't a firewall rule to remember, it's the default.
+- **Metrics before intuition** — Prometheus/Grafana exist so cluster health
+  is something I can look at, not something I have to guess.
+
+## What's next
+
+TODO — roadmap: what's half-built, what broke and what I learned from it,
+what the next platform component is.

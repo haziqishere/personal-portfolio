@@ -164,6 +164,66 @@ export const DATA = {
   ],
   projects: [
     {
+      title: "Homelab",
+      href: "https://github.com/haziqishere/haziq-homelab",
+      slug: "homelab",
+      dates: "Ongoing",
+      active: true,
+      is_selected_work: true,
+      description:
+        "Self-managed Kubernetes and data platform running on bare-metal at home. GitOps-driven via ArgoCD, with Prefect and the Spark Kubernetes Operator for data workloads, a Prometheus/Grafana observability stack, and Cloudflare Tunnel fronting everything without a single exposed port.",
+      skills: [
+        "kubernetes",
+        "argocd",
+        "helm",
+        "prometheus",
+        "grafana",
+        "cloudflare",
+        "apache-spark",
+        "prefect",
+        "docker",
+      ] as TechnologySlug[],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/haziqishere/haziq-homelab",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
+      title: "RapidKL Bus Tracker",
+      href: "https://medium.com/@haziqhakimi02/end-to-end-near-realtime-bus-tracker-with-lambda-architecture-46e153045bf5",
+      slug: "bus-tracker",
+      dates: "Feb 2026",
+      active: true,
+      is_selected_work: true,
+      description:
+        "End-to-end near real-time tracker for Rapid KL buses, built on a Lambda architecture: Kafka (Aiven) for ingestion, Spark Structured Streaming for processing, an Iceberg-on-S3 lakehouse for the batch layer, and Redis caching current vehicle state for the speed layer. Built with Tan Ze Han Dylan.",
+      skills: [
+        "apache-kafka",
+        "apache-spark",
+        "aws",
+        "apache-iceberg",
+        "duckdb",
+        "redis",
+        "kubernetes",
+        "prefect",
+        "nextjs",
+      ] as TechnologySlug[],
+      links: [
+        {
+          type: "Article",
+          href: "https://medium.com/@haziqhakimi02/end-to-end-near-realtime-bus-tracker-with-lambda-architecture-46e153045bf5",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
       title: "Chat Collect",
       href: "https://chatcollect.com",
       slug: "chat-collect",
@@ -215,7 +275,7 @@ export const DATA = {
       slug: "",
       dates: "April 2023 - September 2023",
       active: true,
-      is_selected_work: true,
+      is_selected_work: false,
       description:
         "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
       skills: projectSkills.webApp,
@@ -240,7 +300,7 @@ export const DATA = {
       slug: "",
       dates: "April 2023 - March 2024",
       active: true,
-      is_selected_work: true,
+      is_selected_work: false,
       description:
         "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
       skills: projectSkills.webApp,

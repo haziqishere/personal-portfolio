@@ -1,0 +1,128 @@
+---
+title: "End-to-End Near Real-Time Bus Tracker with Lambda Architecture"
+date: "2026-02-01"
+summary: "Tracking Rapid KL buses in near real-time on a proper Lambda architecture — Kafka into a speed layer served by Redis and a batch layer served by an Iceberg lakehouse."
+---
+
+## Overview
+
+A near real-time tracker for Rapid KL buses, built with **Tan Ze Han
+Dylan** (UPM). The point wasn't just "show buses on a map" — it was to
+build a real Lambda architecture underneath that map: one path optimized
+for low-latency current state, and a separate, durable path for historical
+and ad-hoc analytical queries, both fed from the same stream.
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*DZRnTOqLhnkBgcE5MZ0cwQ.png"
+  type="image"
+  alt="End-to-end architecture: Kafka ingestion into a Spark Structured Streaming job that fans out to a Redis speed layer and an Iceberg-on-S3 batch layer"
+/>
+
+## Speed layer vs. batch layer
+
+Lambda architecture's whole premise is running two paths off the same
+ingested data, each optimized for a different question:
+
+- **Speed layer** — "where is this bus *right now*?" Kafka → Spark
+  Structured Streaming → **Redis**, caching and serving current vehicle
+  state with the low latency a live map needs.
+- **Batch layer** — "where has this bus been, and what does the network
+  look like over time?" The same stream lands in an **Iceberg-on-S3
+  lakehouse**, queried in batch with **DuckDB** for ad-hoc and historical
+  analysis — durable, replayable, and decoupled from the live-serving path.
+
+One Spark Structured Streaming job processes the stream once and writes to
+both destinations, rather than running two separate pipelines that could
+drift out of sync with each other.
+
+## Ingestion: Kafka on Aiven
+
+Vehicle position events are published to a **Kafka** cluster hosted on
+**Aiven** — a managed Kafka service rather than something self-run, since
+the point of this project was the pipeline architecture, not operating
+Kafka brokers. Kafka is "the durable, scalable buffer that decouples data
+producers from downstream consumers": producer and consumer connections
+authenticate over **mutual TLS (mTLS)**, with credentials mounted into pods
+as Kubernetes Secrets rather than baked into images or config.
+
+## Stream processing: Spark Structured Streaming
+
+Spark Structured Streaming subscribes to the Kafka topic and processes it
+in micro-batches:
+
+```python
+df = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", CA_SERVERS) \
+    .option("kafka.security.protocol", "SSL")
+```
+
+The job enforces a strict schema on read (malformed events don't silently
+corrupt downstream data), parses and flattens the nested JSON payload, and
+normalizes timestamps for event-time processing. Writes are partitioned by
+date and `route_id`, and checkpointing is backed by S3 for exactly-once
+semantics — a pod or node restart resumes from the last checkpoint instead
+of reprocessing or dropping events.
+
+## Storage: the Iceberg lakehouse
+
+The batch layer's durable store is an **Iceberg** table format on top of
+S3 — Parquet data files with Iceberg's metadata/snapshot layer on top,
+partitioned by date and route the same way the streaming writes are. That
+gets the batch layer schema evolution and time-travel without needing a
+warehouse to sit in front of it.
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*T4Z2l8BKvI4mbdCket7JjQ.png"
+  type="image"
+  alt="Storage layer: Iceberg table format over Parquet files on S3, partitioned by date and route"
+/>
+
+**DuckDB** sits on top of the lakehouse as the batch layer's query engine —
+querying Iceberg tables directly for ad-hoc and analytical work, without
+standing up a separate data warehouse for what's fundamentally occasional,
+exploratory querying.
+
+## Orchestration & deployment
+
+The cluster runs on **K3s** (lightweight Kubernetes). **ArgoCD** owns
+deployment — every Kubernetes resource is reconciled from Git rather than
+applied by hand, the same GitOps model as [the homelab
+platform](/projects/homelab). **Prefect** orchestrates the batch-layer
+jobs on top of that: scheduling and sequencing the DuckDB/Iceberg work
+that doesn't belong in the always-on streaming path.
+
+## Observability
+
+A Grafana dashboard tracks the pipeline's actual health, not just whether
+pods are up:
+
+- Kafka consumer lag
+- Spark micro-batch processing duration
+- End-to-end throughput (records/second)
+- CPU and memory usage per component
+
+## The live map
+
+The speed layer surfaces through a **Next.js** frontend rendering live bus
+positions on a **LeafletJS** map — the actual point of the speed
+layer/Redis path existing at all.
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="why-two-paths">
+    <AccordionTrigger>
+      Why not just serve everything from Redis, or everything from Iceberg?
+    </AccordionTrigger>
+    <AccordionContent>
+      They're optimized for opposite things. Redis is fast but not built
+      for large historical scans or ad-hoc analytical queries; Iceberg on
+      S3 is durable and queryable at scale but nowhere near fast enough for
+      a live map polling current position. Splitting them means each layer
+      only has to be good at one job.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+TODO — real throughput/latency numbers from the Grafana dashboard, a
+concrete DuckDB query example, and what broke/what I'd change running this
+end to end.

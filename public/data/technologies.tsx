@@ -56,6 +56,7 @@ export const TECHNOLOGIES = [
   { slug: "great-expectations", name: "Great Expectations", icon: "/icons/gx.svg" },
   { slug: "dbt", name: "Dbt", icon: "/icons/dbt.svg" },
   { slug: "postgresql", name: "PostgreSQL", icon: "/icons/postgresql.svg" },
+  { slug: "duckdb", name: "DuckDB", icon: "/icons/duckdb.svg" },
 
   // DS/ML Engineering
   { slug: "tensorflow", name: "TensorFlow", icon: "/icons/tensorflow.svg" },

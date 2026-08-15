@@ -115,8 +115,18 @@ export default function ProjectCaseStudy({ params }: PageProps) {
         </BlurFade>
       )}
 
-      <div className="mt-10 flex gap-12">
-        <article className="prose min-w-0 max-w-none flex-1 text-pretty font-sans dark:prose-invert prose-headings:scroll-mt-20 prose-headings:tracking-tight">
+      {/* TOC floats in the right gutter, mirroring the back button's left
+          gutter treatment above — same zero-footprint sticky+absolute
+          trick, so the article isn't sharing its column with a 240px
+          sidebar and gets the full content width to itself. */}
+      <div className="sticky top-32 z-40 hidden h-0 xl:block">
+        <div className="absolute left-[calc(50%+31rem)] w-[240px]">
+          <TableOfContents />
+        </div>
+      </div>
+
+      <div className="mt-10">
+        <article className="prose min-w-0 max-w-none text-pretty font-sans dark:prose-invert prose-headings:scroll-mt-20 prose-headings:tracking-tight">
           <MDXRemote
             source={content}
             components={getMDXComponents()}
@@ -136,12 +146,6 @@ export default function ProjectCaseStudy({ params }: PageProps) {
             }}
           />
         </article>
-
-        <aside className="hidden w-[240px] shrink-0 lg:block">
-          <div className="sticky top-20">
-            <TableOfContents />
-          </div>
-        </aside>
       </div>
 
       <MobileTableOfContents />
