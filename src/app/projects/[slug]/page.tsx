@@ -48,31 +48,23 @@ export default function ProjectCaseStudy({ params }: PageProps) {
   const { content, frontmatter } = post;
 
   return (
-    // Breaks out of the global max-w-4xl layout wrapper (same -mx-[50vw]
-    // trick used elsewhere in this codebase, e.g. the /projects hero) so
-    // this page can use its own wider column, and so the back button's
-    // sticky wrapper below spans the true viewport width — its `left`
-    // offsets are computed against that width, not the narrower default
-    // column.
-    <main className="relative -mx-[50vw] left-[50%] right-[50%] flex w-screen flex-col min-h-[100dvh]">
+    <main className="flex flex-col min-h-[100dvh]">
       <HashScrollHandler />
 
       {/* Sticky in the page's left margin, like Medium/Confluence — the
           wrapper is h-0 so it takes no space in the article flow (the
           title isn't pushed down), while `sticky` on it still tracks
           scroll normally. The button is absolute inside that zero-height
-          wrapper purely to place it horizontally, and that wrapper spans
-          the full viewport width (main is broken out above), so the xl:
-          calc is relative to true viewport width, not the content column.
-          Below xl there's no real gutter next to the max-w-6xl column, so
-          it sits near the viewport edge instead; at xl+ it hugs the
-          content's own left edge (50% - half of max-w-6xl - gap). */}
+          wrapper purely to place it horizontally. Below xl there's no real
+          gutter next to the max-w-4xl column, so it sits near the
+          viewport edge instead; at xl+ it hugs the content's own left
+          edge (50% - half of max-w-4xl - gap). */}
       <div className="sticky top-[8.5rem] z-40 h-0">
         <Button
           asChild
           variant="outline"
           size="icon"
-          className="absolute left-4 md:left-8 xl:left-[calc(50%-39rem)]"
+          className="absolute left-4 md:left-8 xl:left-[calc(50%-31rem)]"
         >
           <Link href="/projects">
             <ArrowLeft className="h-4 w-4" />
@@ -81,77 +73,75 @@ export default function ProjectCaseStudy({ params }: PageProps) {
         </Button>
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-6">
-        <div className="space-y-3 border-b border-foreground/10 pb-8">
-          {frontmatter.date && (
-            <time className="text-sm text-muted-foreground">
-              {formatDate(frontmatter.date)}
-            </time>
-          )}
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-            {frontmatter.title || project.title}
-          </h1>
-          {frontmatter.summary && (
-            <p className="max-w-2xl text-muted-foreground md:text-lg">
-              {frontmatter.summary}
-            </p>
-          )}
-          {project.links.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2">
-              {project.links.map((link, idx) => (
-                <Link href={link.href} key={idx} target="_blank">
-                  <Badge className="flex gap-2 px-2 py-1 text-[10px]">
-                    {link.icon}
-                    {link.type}
-                  </Badge>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {frontmatter.cover && (
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <div className="relative mt-8 h-[360px] w-full overflow-hidden rounded-xl border">
-              <Image
-                src={frontmatter.cover}
-                alt={frontmatter.title || project.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </BlurFade>
+      <div className="space-y-3 border-b border-foreground/10 pb-8">
+        {frontmatter.date && (
+          <time className="text-sm text-muted-foreground">
+            {formatDate(frontmatter.date)}
+          </time>
         )}
+        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
+          {frontmatter.title || project.title}
+        </h1>
+        {frontmatter.summary && (
+          <p className="max-w-2xl text-muted-foreground md:text-lg">
+            {frontmatter.summary}
+          </p>
+        )}
+        {project.links.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            {project.links.map((link, idx) => (
+              <Link href={link.href} key={idx} target="_blank">
+                <Badge className="flex gap-2 px-2 py-1 text-[10px]">
+                  {link.icon}
+                  {link.type}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
 
-        <div className="mt-10 flex gap-12">
-          <article className="prose min-w-0 max-w-none flex-1 text-pretty font-sans dark:prose-invert prose-headings:scroll-mt-20 prose-headings:tracking-tight">
-            <MDXRemote
-              source={content}
-              components={getMDXComponents()}
-              options={{
-                mdxOptions: {
-                  remarkPlugins: [remarkGfm],
-                  rehypePlugins: [
-                    [
-                      rehypePrettyCode,
-                      {
-                        theme: { light: "min-light", dark: "min-dark" },
-                        keepBackground: false,
-                      },
-                    ],
-                  ],
-                },
-              }}
+      {frontmatter.cover && (
+        <BlurFade delay={BLUR_FADE_DELAY * 3}>
+          <div className="relative mt-8 h-[360px] w-full overflow-hidden rounded-xl border">
+            <Image
+              src={frontmatter.cover}
+              alt={frontmatter.title || project.title}
+              fill
+              className="object-cover"
+              priority
             />
-          </article>
+          </div>
+        </BlurFade>
+      )}
 
-          <aside className="hidden w-[240px] shrink-0 lg:block">
-            <div className="sticky top-20">
-              <TableOfContents />
-            </div>
-          </aside>
-        </div>
+      <div className="mt-10 flex gap-12">
+        <article className="prose min-w-0 max-w-none flex-1 text-pretty font-sans dark:prose-invert prose-headings:scroll-mt-20 prose-headings:tracking-tight">
+          <MDXRemote
+            source={content}
+            components={getMDXComponents()}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+                rehypePlugins: [
+                  [
+                    rehypePrettyCode,
+                    {
+                      theme: { light: "min-light", dark: "min-dark" },
+                      keepBackground: false,
+                    },
+                  ],
+                ],
+              },
+            }}
+          />
+        </article>
+
+        <aside className="hidden w-[240px] shrink-0 lg:block">
+          <div className="sticky top-20">
+            <TableOfContents />
+          </div>
+        </aside>
       </div>
 
       <MobileTableOfContents />
