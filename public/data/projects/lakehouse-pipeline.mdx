@@ -1,233 +1,356 @@
 ---
-title: "Modern Data Lakehouse: From Raw Data to Analytics"
-summary: "A production-ready, ACID-compliant data lakehouse with Git-like version control for data — raw CSV files transformed into analytics-ready dimensional models."
+title: "Building a Modern Data Lakehouse: From Raw Data to Analytics"
+summary: "Pet project: end-to-end data pipeline from raw to curated data with a Metabase BI platform on top."
 ---
 
-## Overview
+## Understanding Lakehouse
 
-This project implements a **medallion architecture** data lakehouse with
-three distinct layers:
+Data lakehouse is basically open data management architecture that combine
+the benefit cheap and flexible storage of Data lake while having ACID
+capabilities of Data warehouse.
 
-- **Landing Layer**: Raw data ingestion from CSV files
-- **Staging Layer**: Data cleaning, standardization, and type casting
-- **Curated Layer**: Analytics-ready dimensional models (star schema)
+In data warehouse, data is already cleaned, integrated and processed since
+storage is expensive. The data quality management & data governance usually
+done here so downstream users can already use it for their use-cases.
+However DW is not suitable for ad-hoc task since it impose strict schema.
+This is where Data lake comes in. To put it simply, a data lake is where you
+stores raw data in form of structured, semi-structured or unstructured in
+which you can think of processing part later.
 
-The lakehouse processes sales data (orders, products, categories,
-territories) and transforms them into business intelligence-ready fact and
-dimension tables, enabling powerful analytics and visualizations through
-Metabase.
+> A data lakehouse attempts to get the best of both worlds. It allows the
+> storage of raw data like a data lake, while also facilitating the option
+> for preprocessed, structured data like a warehouse. This combination can
+> improve processing time and efficiency without compromising flexibility.
+> — Databricks
 
-TODO — drop the real high-level architecture diagram here, e.g.
-`<MediaViewer src="..." type="image" alt="High-level architecture overview" />`.
+The main benefit of lakehouse is:
+
+- **Support schema evolution.** Unlike Data warehouse, a lakehouse does not restricted to lock-schema. Instead, we are able to do changes in the schema without rerunning the whole pipeline.
+- **Transactional consistency** since it supports ACID operations.
+- **Time travel and role-back** since it also holds snapshots.
+
+Lakehouse achieves these by storing flat-files (such as parquet or CSV) in
+object storage (such as S3). Then we would have a open table format which is
+Apache Iceberg. Iceberg basically is an abstraction between your flat-files
+and storage layer by handling both data and metadata for your table. We
+mainly interact with the metadata manifest in form of Iceberg table.
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*AMidHDKijPH3qzDbEQ6Qqg.png"
+  type="image"
+  alt="Iceberg lakehouse metadata and catalog layers — retrieved and edited from BI Insights Inc"
+/>
+<p style={{ textAlign: "center", marginTop: "-1rem" }}><em>Retrieved and edited from BI Insights Inc</em></p>
+
+Then, we have catalog layer that handle high-level versioning of schema and
+table. A key feature of Project Nessie is that it has git-like version
+control of the data.
+
+I want to highlight that Iceberg at metadata layer will store detailed
+metadata about datasets, including schema information, table definitions,
+and partition details. In contrast, catalog will organize and manage
+datasets, providing a high-level structure for databases and tables which
+enable data discovery, access control, and governance.
 
 ## Architecture
 
-### Lakehouse Architecture Layers
+Today I will be reviewing a Data Lakehouse project with query engine and
+building data pipelines. After that completed, we will provision a BI
+platform which is Metabase and perform analytics of processed data. Below is
+the high-level overview of the project:
 
-The lakehouse is built on a modern **layered architecture** that separates
-concerns between storage, metadata management, and catalog operations. This
-design choice enables ACID transactions, version control, and schema
-evolution while maintaining performance and scalability.
+TODO — drop the real high-level architecture diagram here, e.g.
+`<MediaViewer src="..." type="image" alt="High-level lakehouse pipeline architecture" />`.
 
-TODO — drop the real layers diagram here, e.g.
-`<MediaViewer src="..." type="image" alt="Lakehouse architecture layers" />`.
+We will use Apache Airflow to orchestrate our batch pipelines. The pipeline
+ingest the data from flat-files into landing database. Then processing and
+transformation, it will use SQL logic that runs via dbt with Trino query
+engine. The data will be sequently transform and process to staging
+database then finally to curated database. The tables in curated will be
+cleaned data that is ready to be use for analytics. Finally, Metabase
+container will be provision to query curated database for analytics.
 
-**Architecture Layers:**
+## Setting Up Local Data Infrastructure
 
-1. **Catalog Layer (Nessie)**: Provides Git-like version control for data tables, enabling branches, commits, and rollbacks
-2. **Metadata Layer (Apache Iceberg)**: Manages table metadata, schema evolution, and partition information
-3. **File Format (Parquet)**: Columnar storage format optimized for analytical queries
-4. **Object Storage (MinIO)**: S3-compatible storage layer holding both data and metadata files
+For our lakehouse, as mentioned there are 3 layers which include catalog
+layer, metadata layer and data layer. Below are our tech stacks in building
+local data lakehouse.
 
-### Query Engine Architecture
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*D8ATjkt-v2OUoo5y8E27JQ.png"
+  type="image"
+  alt="Local data lakehouse tech stack"
+/>
 
-The query processing is handled by a distributed **Trino cluster**
-orchestrated through Airflow and transformed using dbt. This architecture
-enables parallel processing and efficient query execution across large
-datasets.
+MinIO is local alternative to other object storage such as S3. We store our
+flat-files into MinIO which in this case is parquet files. Of course, you
+may opt for CSV if you prefer; however, Parquet files have been the de
+facto standard for storing analytics structured data in data lakes and
+warehouses. You can easily spins up MinIO container via docker-compose as
+below:
 
-TODO — drop the real Trino/dbt/Nessie query flow diagram here, e.g.
-`<MediaViewer src="..." type="image" alt="Trino query engine architecture" />`.
-
-**Query Execution Flow:**
-
-1. **Orchestration Layer**: Airflow schedules and manages dbt transformation jobs
-2. **Transformation Layer**: dbt compiles SQL models and executes them via Trino
-3. **Query Engine**: Trino coordinator distributes work across worker nodes
-4. **Catalog Integration**: Nessie resolves table locations and points to Iceberg metadata
-5. **Data Access**: Iceberg metadata layer directs queries to the appropriate Parquet files in MinIO
-
-This separation of concerns allows for:
-- **Scalability**: Add more Trino workers as data volume grows
-- **Version Control**: Track and rollback data changes via Nessie
-- **Performance**: Distributed query execution with metadata pruning
-- **Flexibility**: Swap storage backends without changing query logic
-
-### Data Flow
-
-```
-CSV Files → Airflow → Landing (dbt seed) → Staging (dbt transformations) → Curated (dimensional models) → Metabase
-```
-
-1. **Ingestion**: CSV files loaded via dbt seed into Iceberg tables
-2. **Transformation**: dbt models clean, standardize, and transform data across layers
-3. **Modeling**: Dimensional star schema created with fact and dimension tables
-4. **Analytics**: Metabase queries curated layer via Trino for dashboards and reports
-
-## Features
-
-### Lakehouse Capabilities
-- **ACID Transactions**: Guaranteed data consistency across all operations
-- **Time Travel**: Query historical data states and audit changes
-- **Version Control**: Git-like operations for data tables (branches, commits, rollbacks)
-- **Schema Evolution**: Add/modify columns without breaking existing queries
-- **Distributed Processing**: Parallel query execution across Trino cluster
-
-### Data Engineering
-- **Three-Layer Medallion Architecture**: Separation of raw, cleaned, and curated data
-- **Data Quality Testing**: dbt tests for uniqueness, null checks, and referential integrity
-- **Dimensional Modeling**: Star schema optimized for analytics
-- **Automated Orchestration**: Scheduled daily pipeline with dependency management
-- **Calculated Metrics**: Business KPIs computed during transformation (revenue, cost, profit)
-- **Custom Operators**: Custom dbt operator for local execution
-
-### Analytics & Visualization
-- **Self-Service BI**: Metabase dashboards for business users
-- **Interactive Queries**: Ad-hoc SQL queries via Metabase interface
-- **Performance Optimized**: Columnar Parquet format with partitioning
-
-## Project Structure
-
-```
-lakehouse_pipelines/
-├── dags/
-│   ├── dbt_trino/               # dbt project
-│   │   ├── seeds/               # CSV source files
-│   │   ├── models/
-│   │   │   ├── landing/         # Raw data models
-│   │   │   ├── staging/         # Cleaned data models
-│   │   │   └── curated/         # Dimensional models
-│   │   ├── tests/               # Data quality tests
-│   │   └── dbt_project.yml
-│   └── dbt_dag.py               # Airflow DAG definition
-├── docker/
-│   ├── docker-compose-lake.yaml      # MinIO + Nessie
-│   ├── docker-compose-trino.yaml     # Trino cluster
-│   ├── docker-compose-airflow.yaml   # Airflow services
-│   └── docker-compose-metabase.yaml  # Metabase BI
-├── trino_config/
-│   └── catalog/
-│       └── iceberg.properties   # Iceberg-Nessie-MinIO integration
-├── scripts/
-│   └── managed-lakehouse.sh     # Startup script
-└── pictures/                    # Architecture diagrams and screenshots
+```yaml
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_REGION_NAME: ap-southeast-1
+      MINIO_REGION: ap-southeast-1
+      MINIO_DOMAIN: minio
+      MINIO_ROOT_USER: ${USERNAME}
+      MINIO_ROOT_PASSWORD: ${PASSWORD}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 ```
 
-## Data Models
+For catalog, we will be using Nessie catalog. It is an open-source,
+transactional catalog for data lakes that provides Git-like version control
+for data tables, allowing users to branch, commit, and tag changes. Because
+of this versioning model, you can:
 
-### Curated Layer (Analytics-Ready)
+- Track and manage schema or data changes in a controlled, auditable way.
+- Easily update or evolve table schemas through commits to the catalog.
+- Revert or "roll back" to previous versions or branches, similar to Git, if you need to undo or inspect changes.
 
-**Fact Table**
-- `fact_sale`: Transaction-level sales facts
-  - Dimensions: order_date, product_key, country_key
-  - Metrics: revenue, cost, profit, order_number
+You can also easily spins-up nessie-catalog container into via
+docker-compose as below:
 
-**Dimension Tables**
-- `dim_product`: Product hierarchy (category → subcategory → product)
-- `dim_country`: Geographic territory information
-
-### Pipeline DAG
-
-The `dbt_pipeline` DAG runs daily with two main tasks:
-1. **dbt_seed**: Load CSV files into landing layer
-2. **dbt_run**: Execute transformation models (staging → curated)
-
-## Analytics Dashboard
-
-The project includes a custom Metabase dashboard showcasing:
-
-TODO — drop the real Metabase dashboard screenshot here, e.g.
-`<MediaViewer src="..." type="image" alt="Metabase analytics dashboard" />`.
-
-- **Summary Metrics**: Total revenue, cost, profit, and number of sales
-- **Time-Series Analysis**: Revenue trends by product category
-- **Geographic Insights**: Sales distribution by country (map visualization)
-- **Product Performance**: Profit breakdown by subcategory
-
-### Querying the Curated Layer
-
-Data analysts and data scientists interact with the lakehouse through
-Metabase, which connects to the Trino query engine to access analytics-ready
-data in the curated layer. This architecture separates the analytics
-interface from the underlying storage, enabling scalable query performance.
-
-TODO — drop the real analytics query flow diagram here, e.g.
-`<MediaViewer src="..." type="image" alt="Analytics query flow through Metabase and Trino" />`.
-
-**Analytics Access Pattern:**
-1. **Data Scientists/Analysts** use Metabase's intuitive interface for dashboards and ad-hoc queries
-2. **Metabase** translates user interactions into SQL queries sent to Trino
-3. **Query Engine (Trino)** executes distributed queries across the curated layer
-4. **Curated Database** serves analytics-ready dimensional models optimized for business intelligence
-
-This design enables self-service analytics while maintaining query
-performance through distributed processing.
-
-TODO — drop a real query interface screenshot here, e.g.
-`<MediaViewer src="..." type="image" alt="Metabase query interface" />`.
-
-The curated layer exposes three tables for analytics:
-- `dim_country`: Territory and country information
-- `dim_product`: Product catalog with hierarchies
-- `fact_sale`: Sales transactions with calculated metrics
-
-## Getting Started
-
-### Prerequisites
-- Docker and Docker Compose installed
-- At least 4GB of available memory
-- Ports 3000, 8080, 8081, 9000, 9001, 19120 available
-
-### Quick Start
-
-Run the automated startup script:
-
-```bash
-./scripts/managed-lakehouse.sh
+```yaml
+services:
+  nessie-catalog:
+    image: projectnessie/nessie:0.76.6
+    container_name: nessie-catalog
+    ports:
+      - "19120:19120"
 ```
 
-This script will:
-1. Start all required services (MinIO, Nessie, Trino, Airflow, Metabase)
-2. Initialize the lakehouse infrastructure
-3. Set up the data catalog and storage
-4. Deploy the dbt pipeline
-5. Configure Airflow and Metabase
+We will go through how do we create iceberg metadata layers later.
 
-### Access Points
+Now, we had setup the storage. However, if we are going to create table,
+process and transform table we need a way perform query. That is why we
+need a query engine and transformation framework. For query engine we will
+be using Trino. Trino is SQL-friendly distributed query engine that can be
+set up in a cluster. It physically reads/writes the Iceberg data. For
+transformation framework, we will be using dbt. It serves as to organises
+transformation logic into modular SQL files that later being ran. Below is
+what we would have:
 
-Once running, access the services at:
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*i-l9keqO-c0bOULDqGeWhw.png"
+  type="image"
+  alt="Query engine and transformation framework layout"
+/>
 
-- **Metabase**: http://localhost:3000 (BI dashboards)
-- **Airflow**: http://localhost:8081 (Pipeline orchestration)
-- **Trino**: http://localhost:8080 (Query engine)
-- **MinIO**: http://localhost:9001 (Object storage console)
-- **Nessie**: http://localhost:19120/api/v2 (Data catalog API)
+Spinning up Airflow can be tedious so I will skip it. But if you view the
+code, you can view my github:
+[haziqishere/lakehouse_pipelines](https://github.com/haziqishere/lakehouse_pipelines/blob/main/docker/docker-compose-airflow.yaml)
 
-## Learn More
+In a Trino cluster, you can specify one node to be the coordinator node and
+the rest be workers node. The reason it is advantageous to have 1
+coordinator node is consistent query planning. Below is how you can spin-up
+trino clusters via docker-compose:
 
-A full walkthrough of the architecture, design decisions, and
-implementation details is in the companion write-up: [Building a Modern
-Data Lakehouse: From Raw Data to
-Analytics](https://medium.com/@haziqhakimi02/building-a-modern-data-lakehouse-from-raw-data-to-analytics-930c819f1c4c) —
-covering lakehouse architecture principles, technology selection rationale,
-a step-by-step implementation guide, data modeling best practices,
-performance optimization, and troubleshooting notes.
+```yaml
+services:
+  trino-coordinator:
+    image: trinodb/trino:476
+    container_name: trino-coordinator
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../trino_config/coordinator/config.properties:/etc/trino/config.properties
+      - ../trino_config/catalog:/etc/trino/catalog
+      - ../trino_config/coordinator/init.sql:/etc/trino/init.sql
+  trino-worker-1:
+    image: trinodb/trino:476
+    container_name: trino-worker-1
+    volumes:
+      - ../trino_config/worker/config.properties:/etc/trino/config.properties
+      - ../trino_config/catalog:/etc/trino/catalog
+    depends_on:
+      - trino-coordinator
 
-## Acknowledgments
+  trino-worker-2:
+    image: trinodb/trino:476
+    container_name: trino-worker-2
+    volumes:
+      - ../trino_config/worker/config.properties:/etc/trino/config.properties
+      - ../trino_config/catalog:/etc/trino/catalog
+    depends_on:
+      - trino-coordinator
+```
 
-Built leveraging the power of:
-- Apache Iceberg & Nessie for lakehouse capabilities
-- Trino for distributed SQL processing
-- dbt for analytics engineering
-- Airflow for workflow orchestration
-- Metabase for self-service analytics
+TL;DR: Trino executes queries via SQL. dbt abstracts away boilerplate SQL
+for transformations into a more manageable approach, similar to what ORMs
+do for application queries. The difference is in dbt you still have to
+write queries BUT it helps in managing query dependencies.
+
+Now, how do we create iceberg table? Easy!
+
+We can easily define the table we want to create as Iceberg. We connect our
+Trino cluster to Iceberg connector by simply specifying it in Trino catalog
+configuration:
+
+```properties
+connector.name=iceberg
+iceberg.catalog.type=nessie
+iceberg.nessie-catalog.uri=http://nessie-catalog:19120/api/v2
+iceberg.nessie-catalog.ref=main
+iceberg.nessie-catalog.default-warehouse-dir=s3://local-lakehouse
+fs.native-s3.enabled=true
+s3.endpoint=http://minio:9000
+s3.region=ap-southeast-1
+s3.path-style-access=true
+s3.aws-access-key=admin
+s3.aws-secret-key=password
+```
+
+above configuration will tell Trino to:
+
+- Use the Iceberg connector
+- Use Nessie as the catalog (for table metadata and versioning)
+- Store actual table data in S3-compatible storage (MinIO at `s3://local-lakehouse`)
+
+To make sure dbt uses above configuration, you would have to specify in
+Airflow dag to use iceberg profile.
+
+Afterwards, we simply can create the table by running:
+
+```sql
+CREATE SCHEMA landing;
+CREATE SCHEMA staging;
+CREATE SCHEMA curated;
+```
+
+Then, to make sure all the Airflow dags are connected into one pipeline:
+
+```yaml
+seeds:
+  my_dbt_trino:
+    schema: landing    # Seeds go to landing layer
+
+models:
+  my_dbt_trino:
+    staging:
+      +schema: staging  # Staging models go to staging layer
+    curated:
+      +schema: curated  # Curated models go to curated layer
+```
+
+Above is basically metadata file to tells Airflow what to run step-by-step.
+For the actual data processing, each folder has its .sql file that will be
+ran for data processing.
+
+Above is basically metadata file to tells dbt where to materialize each
+table. It defines our 3 layer data lakehouse architecture where each layer
+is a 'checkpoint' of the state of data.
+
+- **Seeds → Landing Layer:** Raw CSV files are loaded into the landing schema as-is
+- **Staging Models → Staging Layer:** Light transformations (cleaning, type casting) go to staging schema
+- **Curated Models → Curated Layer:** Analytics-ready tables go to landing schema
+
+For the actual data processing, each folder has its .sql file that will be
+ran for data processing.
+
+```
+dags/dbt_trino/
+├── seeds/                 #CSV files → landing schema
+│   └── sales.csv
+│       ...
+├── models/
+│   ├── staging/           # Preprocessing SQL → staging schema
+│   │   └── stg_sales.sql
+│           ...
+│   └── curated/           # Analytics-ready SQL → curated schema
+│       └── fact_sale.sql
+```
+
+We will not go too details on that, but here is what you need to know —
+staging is where we do preprocessing and data that lands in curated table
+are ready to be query. We perform reorganize the data into fact table and
+dimensional table. To be specific, we change it into STAR schema
+
+```
+        dim_product          dim_country
+              |                   |
+              └─── fact_sale ─────┘
+                   (center)
+```
+
+- `fact_sale`: Contains business metrics (revenue, cost, profit) with foreign keys
+- `dim_product`: Product attributes (name, category, color)
+- `dim_country`: Geographic attributes (country, continent)
+
+This design makes it easy for analysts to query sales data by product,
+country, or any combination without complex joins.
+
+After everything, lets run the pipeline via Airflow.
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*FMKzp7AoJsL2qLtCd3sqjA.png"
+  type="image"
+  alt="Airflow pipeline run"
+/>
+
+## Data & Business Analytics
+
+The last step is to extract values from the data that you have. This is
+typically Data Analyst or Data Scientist job to figure out patterns and do
+data modelling from processed & cleaned data. To do that, you have to
+atleast a dashboarding tool. Luckily, you know a BI tool name Metabase
+which we can easily run setup. All you have to do is spin-up the Metabase
+container and establish connection to your data lakehouse via query engine.
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*e155K60X0VVAN_9CatsKtQ.png"
+  type="image"
+  alt="Metabase business analytics"
+/>
+
+We will be reusing the already created Trino cluster. First, spin up a
+Metabase container. You can easily view the dockerfile configuration in the
+github. Next, in your browser, open the port in which Metabase is running.
+Add new database connection and fill in the field as below:
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*LlTes6RBCdTLPxPt9a4yoA.png"
+  type="image"
+  alt="Metabase new database connection setup"
+/>
+
+After connection has been established, now you are able to do derive
+values from your data. Of course, Metabase deserves another article on its
+own. However below are the possibility you can achieve with Metabase:
+
+1. Perform query with SQL syntax
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*cnZsYBALO4_aOxIDPRSF5g.png"
+  type="image"
+  alt="Querying with SQL syntax in Metabase"
+/>
+
+2. Dashboarding and Analytics
+
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*5IuKq_m5bhh82wWNG1Lo-Q.png"
+  type="image"
+  alt="Metabase dashboard"
+/>
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*m4tRfeT0_wunR5Z0Q3lThg.png"
+  type="image"
+  alt="Metabase dashboard analytics"
+/>
+
+## Reference
+
+[Build a Lakehouse on a Laptop with dbt, Airflow, Trino, Iceberg, and
+MinIO](https://blog.dataengineerthings.org/build-a-lakehouse-on-a-laptop-with-dbt-airflow-trino-iceberg-and-minio-0700540a183d)

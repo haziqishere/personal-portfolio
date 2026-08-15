@@ -270,6 +270,11 @@ export const DATA = {
           href: "https://medium.com/@haziqhakimi02/building-a-modern-data-lakehouse-from-raw-data-to-analytics-930c819f1c4c",
           icon: <Icons.globe className="size-3" />,
         },
+        {
+          type: "Source",
+          href: "https://github.com/haziqishere/lakehouse_pipelines",
+          icon: <Icons.github className="size-3" />,
+        },
       ],
       image: "",
       video: "",
