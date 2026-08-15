@@ -167,7 +167,6 @@ export const DATA = {
       title: "Homelab",
       href: "https://github.com/haziqishere/haziq-homelab",
       slug: "homelab",
-      dates: "Ongoing",
       active: true,
       is_selected_work: true,
       description:
@@ -197,7 +196,6 @@ export const DATA = {
       title: "RapidKL Bus Tracker",
       href: "https://medium.com/@haziqhakimi02/end-to-end-near-realtime-bus-tracker-with-lambda-architecture-46e153045bf5",
       slug: "bus-tracker",
-      dates: "Feb 2026",
       active: true,
       is_selected_work: true,
       description:
@@ -224,12 +222,64 @@ export const DATA = {
       video: "",
     },
     {
+      title: "Student Dropout ML Pipeline",
+      href: "https://github.com/haziqishere/student-dropout-prediction-ml-kubeflow",
+      slug: "ml-student-dropout-kubeflow",
+      active: true,
+      is_selected_work: true,
+      description:
+        "Pet project mimicking a real industry ML lifecycle end to end on Kubeflow Pipelines: requirement gathering, EDA, feature engineering, training, and evaluation, predicting which university students are at risk of dropping out.",
+      skills: [
+        "kubeflow",
+        "kubernetes",
+        "docker",
+        "python",
+        "scikit-learn",
+      ] as TechnologySlug[],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/haziqishere/student-dropout-prediction-ml-kubeflow",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
+      title: "Modern Data Lakehouse",
+      href: "https://medium.com/@haziqhakimi02/building-a-modern-data-lakehouse-from-raw-data-to-analytics-930c819f1c4c",
+      slug: "lakehouse-pipeline",
+      active: true,
+      is_selected_work: true,
+      description:
+        "ACID-compliant data lakehouse built on the medallion architecture: Airflow + dbt transform raw CSVs through landing, staging, and curated layers on an Iceberg/Nessie/MinIO stack, queried via Trino and served through Metabase dashboards.",
+      skills: [
+        "python",
+        "docker",
+        "apache-airflow",
+        "dbt",
+        "apache-iceberg",
+        "trino",
+        "minio",
+        "postgresql",
+      ] as TechnologySlug[],
+      links: [
+        {
+          type: "Article",
+          href: "https://medium.com/@haziqhakimi02/building-a-modern-data-lakehouse-from-raw-data-to-analytics-930c819f1c4c",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
       title: "Chat Collect",
       href: "https://chatcollect.com",
       slug: "chat-collect",
-      dates: "Jan 2024 - Feb 2024",
       active: true,
-      is_selected_work: true,
+      is_selected_work: false,
       description:
         "With the release of the [OpenAI GPT Store](https://openai.com/blog/introducing-the-gpt-store), I decided to build a SaaS which allows users to collect email addresses from their GPT users. This is a great way to build an audience and monetize your GPT API usage.",
       skills: projectSkills.webApp,
@@ -248,9 +298,8 @@ export const DATA = {
       title: "Magic UI",
       href: "https://magicui.design",
       slug: "",
-      dates: "June 2023 - Present",
       active: true,
-      is_selected_work: true,
+      is_selected_work: false,
       description:
         "Designed, developed and sold animated UI components for developers.",
       skills: projectSkills.webApp,
@@ -273,7 +322,6 @@ export const DATA = {
       title: "llm.report",
       href: "https://llm.report",
       slug: "",
-      dates: "April 2023 - September 2023",
       active: true,
       is_selected_work: false,
       description:
@@ -296,9 +344,7 @@ export const DATA = {
     },
     {
       title: "Automatic Chat",
-      href: "https://automatic.chat",
       slug: "",
-      dates: "April 2023 - March 2024",
       active: true,
       is_selected_work: false,
       description:
@@ -320,7 +366,6 @@ export const DATA = {
       title: "Dummy Repo",
       href: "https://github.com/haziqishere",
       slug: "",
-      dates: "Jan 2025",
       active: false,
       is_selected_work: false,
       description: "Placeholder entry to preview the unfeatured project card layout.",
@@ -340,7 +385,6 @@ export const DATA = {
       title: "Dummy Pipeline",
       href: "https://github.com/haziqishere",
       slug: "",
-      dates: "Mar 2025",
       active: false,
       is_selected_work: false,
       description: "Placeholder entry with a data/ML stack, to test the tech filter.",
@@ -360,7 +404,6 @@ export const DATA = {
       title: "Dummy Cluster",
       href: "https://github.com/haziqishere",
       slug: "",
-      dates: "May 2025",
       active: false,
       is_selected_work: false,
       description: "Placeholder entry with an infra/devops stack, to test the tech filter.",

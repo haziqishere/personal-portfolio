@@ -1,0 +1,226 @@
+---
+title: "Student Dropout ML Training Pipeline (Kubeflow)"
+summary: "A pet project mimicking a real industry ML lifecycle end to end — requirement gathering, EDA, feature engineering, training, and evaluation — orchestrated as a Kubeflow Pipeline."
+---
+
+## Overview
+
+In this pet project, I tried to apply and mimic steps that one would take to
+train ML in real-life industry settings. This include Requirement gathering,
+EDA, Feature Engineering, Model Training and evaluation.
+
+Dataset [Student Dropout Prediction](https://www.kaggle.com/datasets/meharshanali/student-dropout-prediction-dataset/code)
+will be use. We're going to put our shoes in as Uni administration to
+identify student with high possibility to dropout. In this exercise, we will
+based our requirements on given scenario.
+
+## Feature Engineering
+
+Raw features rarely tell the full story. The goal here was to construct
+features that encode **behavioral patterns** and **latent signals** that a
+student is at risk — signals that a university administrator would
+intuitively understand but that raw columns don't directly express.
+
+### Engineered Features
+
+#### 1. Efficiency — *How well does a student convert study time into academic output?*
+
+```python
+df['Efficiency'] = (df['CGPA'] / (1 + df['Study_Hours_per_Day'])).round(6)
+```
+
+CGPA alone doesn't distinguish between a student who achieves a 3.5 GPA
+studying 2 hours a day versus one who needs 8 hours to get there. Since we
+have no direct measure of intelligence or aptitude, `Efficiency` acts as a
+proxy: **academic output per unit of study effort**. A student with
+declining efficiency may be struggling cognitively or burning out, even if
+their CGPA hasn't yet reflected it.
+
+> Feature importance: **0.1363** (2nd highest overall) — the model strongly relies on this signal.
+
+#### 2. GPA Trend — *Is the student improving or declining over time?*
+
+```python
+df['gpa_trend'] = (df['Semester_GPA'] - df['CGPA']).round(6)
+```
+
+A student's cumulative GPA is a lagging indicator. `gpa_trend` captures the
+**direction of academic momentum** — whether this semester's performance is
+above or below their historical average. A negative trend means the student
+is underperforming relative to their own baseline, which is an early
+warning sign even when the absolute CGPA still looks acceptable.
+
+TODO — drop the real plot here once the repo is public, e.g.
+`<MediaViewer src="..." type="image" alt="GPA trend distribution: dropout vs. non-dropout students" />`.
+
+The plots above confirm the hypothesis: **35.6% of dropout students show a
+declining GPA trend**, compared to 31.1% among non-dropouts. The
+distribution also shows dropouts have heavier left tails, meaning more
+students with sharper recent declines.
+
+> Feature importance: **0.0431** — complements CGPA without redundancy (correlation with CGPA: only 0.02).
+
+#### 3. Engagement Score — *How actively is the student participating in academic life?*
+
+```python
+df['Engagement_Score'] = (
+    (df['Attendance_Rate'] * df['Study_Hours_per_Day'])
+    / (1 + df['Assignment_Delay_Days'])
+).round(7)
+```
+
+This composite metric combines three behavioral signals:
+- **Attendance rate** — physical presence in class
+- **Study hours** — time invested outside class
+- **Assignment delay** — procrastination as a penalty factor
+
+The `1 + Assignment_Delay_Days` denominator dampens the score for students
+who habitually submit late. A student who attends class and studies but
+constantly delays assignments scores lower than one who is consistently on
+time — reflecting real engagement quality, not just quantity.
+
+> Feature importance: **0.0720** (5th highest overall).
+
+### Correlation Matrix
+
+TODO — drop the real correlation matrix plot here once the repo is public,
+e.g. `<MediaViewer src="..." type="image" alt="Feature correlation matrix" />`.
+
+Key observations from the correlation matrix:
+- **CGPA, Semester_GPA, and GPA are highly correlated (r = 0.96)** — keeping all three would introduce multicollinearity. `GPA` and `Semester_GPA` were dropped in favour of `CGPA` + `gpa_trend` to preserve the signal without the redundancy.
+- **Stress_Index shows the strongest negative correlation with Dropout** among raw features at **-0.39**, confirming it's a critical retention signal.
+- Most engineered features have **low cross-correlation** with each other, meaning they each contribute independent information to the model.
+
+### Feature Importance Summary (Top 10)
+
+| Feature | Importance | Type |
+|---|---|---|
+| CGPA | 0.1711 | Raw |
+| Efficiency | 0.1363 | **Engineered** |
+| Stress_Index | 0.0800 | Raw |
+| Attendance_Rate | 0.0744 | Raw |
+| Engagement_Score | 0.0720 | **Engineered** |
+| Study_Hours_per_Day | 0.0648 | Raw |
+| Travel_Time_Minutes | 0.0640 | Raw |
+| Family_Income | 0.0434 | Raw |
+| gpa_trend | 0.0431 | **Engineered** |
+| Age | 0.0375 | Raw |
+
+3 out of the top 5 most important features are engineered, validating the
+feature engineering effort.
+
+## Pipeline Run
+
+After a successful run, the Kubeflow UI shows the full DAG execution —
+`load-data` → `preprocess-data` → `train-model` → `evaluate-model` — with
+all intermediate artifacts (preprocessor, train/test splits, model output,
+metrics) stored and linked.
+
+TODO — drop the real Kubeflow run screenshot here once the repo is public,
+e.g. `<MediaViewer src="..." type="image" alt="Kubeflow pipeline DAG after a successful run" />`.
+
+## Model Evaluation
+
+### What metric matters: Recall
+
+In a student dropout prediction context, **recall is the primary metric**,
+not accuracy.
+
+The cost asymmetry is straightforward:
+- **False Negative (missed dropout)** — a student who will drop out goes undetected. No intervention is triggered. This is the costly outcome.
+- **False Positive (wrong alert)** — a student who won't drop out gets flagged. The remediation is a counselling session or a welfare check-in. Low cost, potentially still beneficial.
+
+Given this, we want to **maximise recall on class 1 (Dropout)** — catching
+as many at-risk students as possible — even at the expense of some
+precision. The justification behind this trade-off is, the false positives
+are not costly or harmful.
+
+### Results
+
+TODO — drop the real evaluation output screenshot here once the repo is
+public, e.g. `<MediaViewer src="..." type="image" alt="Model evaluation output" />`.
+
+```
+Default threshold: 0.5
+Optimal threshold (max F1): 0.535
+
+Classification Report:
+              precision    recall  f1-score   support
+           0       0.90      0.77      0.83      1529
+           1       0.49      0.73      0.59       471
+    accuracy                           0.76      2000
+   macro avg       0.70      0.75      0.71      2000
+weighted avg       0.81      0.76      0.77      2000
+```
+
+| Metric | Class 0 (Not Dropout) | Class 1 (Dropout) |
+|---|---|---|
+| Precision | 0.90 | 0.49 |
+| Recall | 0.77 | **0.73** |
+| F1-Score | 0.83 | 0.59 |
+
+Dropout recall improved from **0.38 → 0.73** after applying two fixes:
+
+1. **`class_weight="balanced"`** on `LogisticRegression` — corrects for the class imbalance (~24% dropout) by penalising misclassification of the minority class more heavily during training.
+2. **Threshold tuning** — instead of the default 0.5, the pipeline finds the threshold that maximises F1 on the dropout class via `precision_recall_curve`. The optimal threshold settled at **0.535** for this run.
+
+Overall accuracy dropped slightly from 0.81 → 0.76, which is the expected
+trade-off: the model now correctly catches more dropout students at the
+cost of more false positives on class 0. Given that the remediation is a
+counselling session, this is an acceptable trade.
+
+## Run This Project
+
+1. kubectl
+2. Kubernetes
+3. Kubeflow
+
+### Running Kubeflow
+
+In my case, I've my own kubernetes cluster running on-premise. Cloud
+provider such as AWS & GCS does provide managed Kubernetes but I would not
+recommend to bare high cost for pet project. Alternatively you could run it
+on your local.
+
+#### To run everything on local environment, this is what you need:
+
+1. Minikube
+2. Docker
+
+Then run `minikube start --driver=docker` to start local k8s cluster on your
+machine, then run:
+
+```
+export PIPELINE_VERSION=2.15.0
+kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
+kubectl wait --for condition=established --timeout=60s crd/applications.app.k8s.io
+kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/dev?ref=$PIPELINE_VERSION"
+```
+
+The code contains metadata yaml configuration for our kubeflow. After
+`kubectl apply`, kubectl will send that to the k8s API server to provision
+respective resources in our cluster.
+
+TLDR: if you were going to go with any option, make sure the machine you're
+deploying Kubeflow onto is an amd64 machine. As of the time of writing,
+Kubeflow hasn't fully supported arm64-based machines yet, so you'll face
+compatibility issues.
+
+### After you have Kubeflow ready, port-forward to the dashboard UI
+
+```
+kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
+```
+
+Next we run the script via `python student-dropout-ml-pipeline.py`.
+Successful execution will result in a metadata yaml file
+`kubeflow_pipeline.yaml`. This is what will be read by `kfp` (the Kubeflow
+Pipelines pip library).
+
+### Deploying the pipeline
+
+We will point `kfp` to the generated yaml file:
+
+```
+kfp pipeline create -p StudentDropout kubeflow_pipeline.yaml
+```
