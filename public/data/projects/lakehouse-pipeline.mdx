@@ -36,11 +36,11 @@ and storage layer by handling both data and metadata for your table. We
 mainly interact with the metadata manifest in form of Iceberg table.
 
 <MediaViewer
-  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*AMidHDKijPH3qzDbEQ6Qqg.png"
+  src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*BkHUGThxoKZ1Fs6vIRaGuQ.png"
   type="image"
-  alt="Iceberg lakehouse metadata and catalog layers — retrieved and edited from BI Insights Inc"
+  alt="Iceberg lakehouse metadata and catalog layers"
+  caption="Retrieved and edited from BI Insights Inc"
 />
-<p style={{ textAlign: "center", marginTop: "-1rem" }}><em>Retrieved and edited from BI Insights Inc</em></p>
 
 Then, we have catalog layer that handle high-level versioning of schema and
 table. A key feature of Project Nessie is that it has git-like version
@@ -59,8 +59,12 @@ building data pipelines. After that completed, we will provision a BI
 platform which is Metabase and perform analytics of processed data. Below is
 the high-level overview of the project:
 
-TODO — drop the real high-level architecture diagram here, e.g.
-`<MediaViewer src="..." type="image" alt="High-level lakehouse pipeline architecture" />`.
+<MediaViewer
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*AMidHDKijPH3qzDbEQ6Qqg.png"
+  type="image"
+  alt="High-level lakehouse pipeline architecture"
+/>
+
 
 We will use Apache Airflow to orchestrate our batch pipelines. The pipeline
 ingest the data from flat-files into landing database. Then processing and

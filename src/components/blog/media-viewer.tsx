@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { CopyHeader } from "@/components/blog/copy-header";
 import {
   Dialog,
   DialogClose,
@@ -12,15 +13,49 @@ import {
 interface MediaViewerProps {
   src: string;
   alt?: string;
+  /** Optional caption shown below the media, e.g. an attribution line
+   * ("Retrieved and edited from BI Insights Inc"). */
+  caption?: string;
   type?: "image" | "video";
   className?: string;
   width?: number;
   height?: number;
 }
 
+// A caption starting with "# " or "## " renders as an actual heading
+// (same CopyHeader the article body uses) instead of a plain caption line —
+// lets a MediaViewer caption double as a section label when that's what's
+// needed, e.g. `caption="## Setting Up Local Data Infrastructure"`.
+function Caption({ children }: { children: string }) {
+  const h2 = children.match(/^##\s+(.*)/);
+  if (h2) {
+    return (
+      <CopyHeader level={2} className="mt-4 text-center text-2xl font-bold md:text-3xl">
+        {h2[1]}
+      </CopyHeader>
+    );
+  }
+
+  const h1 = children.match(/^#\s+(.*)/);
+  if (h1) {
+    return (
+      <CopyHeader level={1} className="mt-4 text-center text-3xl font-bold md:text-4xl">
+        {h1[1]}
+      </CopyHeader>
+    );
+  }
+
+  return (
+    <figcaption className="mt-2 text-center text-sm italic text-muted-foreground">
+      {children}
+    </figcaption>
+  );
+}
+
 export function MediaViewer({
   src,
   alt = "",
+  caption,
   type = "image",
   className,
   width,
@@ -29,32 +64,28 @@ export function MediaViewer({
   const mediaProps = {
     src,
     alt,
-    className: cn(
-      "w-full h-full object-cover rounded-lg border overflow-hidden aspect-video",
-      className
-    ),
+    className: cn("w-full h-auto rounded-lg border", className),
     ...(width && height ? { width, height } : {}),
   };
 
   if (type === "video") {
     return (
-      <div className="my-6 w-full">
-        <div className="relative w-full aspect-video">
-          <video {...mediaProps} controls loop>
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </div>
+      <figure className="my-6 w-full">
+        <video {...mediaProps} controls loop>
+          Your browser does not support the video tag.
+        </video>
+        {caption && <Caption>{caption}</Caption>}
+      </figure>
     );
   }
 
   return (
-    <div className="my-6 w-full">
+    <figure className="my-6 w-full">
       <Dialog>
         <DialogTrigger asChild>
           <button
             type="button"
-            className="relative block w-full aspect-video cursor-zoom-in"
+            className="block w-full cursor-zoom-in"
             aria-label={alt ? `Expand image: ${alt}` : "Expand image"}
           >
             {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
@@ -75,7 +106,8 @@ export function MediaViewer({
           </DialogClose>
         </DialogContent>
       </Dialog>
-    </div>
+      {caption && <Caption>{caption}</Caption>}
+    </figure>
   );
 }
 
