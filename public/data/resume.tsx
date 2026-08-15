@@ -349,6 +349,7 @@ export const DATA = {
     },
     {
       title: "Automatic Chat",
+      href: "https://automatic.chat",
       slug: "",
       active: true,
       is_selected_work: false,
